@@ -251,9 +251,9 @@ if (!$payment || !$pendaftar) {
                 <h6><i class="fas fa-info-circle me-2"></i>Langkah Selanjutnya</h6>
                 <ul class="mb-0 text-start">
                     <li>Tim kami akan memverifikasi pembayaran Anda dalam 1x24 jam</li>
-                    <li>Setelah verifikasi, Anda akan menerima email konfirmasi</li>
-                    <li>Informasi pengumpulan karya akan dikirim melalui email</li>
-                    <li>Jangan lupa untuk memeriksa email Anda secara berkala</li>
+                    <!-- <li>Setelah verifikasi, Anda akan menerima email konfirmasi</li> -->
+                    <!-- <li>Informasi pengumpulan karya akan dikirim melalui email</li> -->
+                    <!-- <li>Jangan lupa untuk memeriksa email Anda secara berkala</li> -->
                     <li>Join grup WhatsApp untuk menerima info lebih lanjut: <a href="<?= $info_kategori['link_grup_wa'] ?>"><?= $info_kategori['link_grup_wa'] ?></a></li>
                 </ul>
             </div>
