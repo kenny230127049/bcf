@@ -51,6 +51,48 @@ class Auth {
             return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
         }
     }
+
+    public function update_account($data) {
+        try {
+            $currentUserData = $this->db->fetch(
+                "SELECT * FROM users WHERE id = ?", 
+                [$data['id']]
+            );
+            
+            // Hash password
+            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+            
+            // Insert user baru
+            $userData = [
+                'username' => $data['username'] ?? $currentUserData["username"],
+                'email' => $data['email'] ?? $currentUserData["email"],
+                'password' => $hashedPassword ?? $currentUserData["password"],
+                'nama_lengkap' => $data['nama_lengkap'] ?? $currentUserData["nama_lengkap"],
+                'telepon' => $data['telepon'] ?? $currentUserData["telepon"],
+                'alamat' => $data['alamat'] ?? $currentUserData["alamat"],
+            ];
+
+            $existingUser = $this->db->fetch(
+                "SELECT id FROM users WHERE username = ?", 
+                [$userData['username']]
+            );
+            
+            if ($existingUser && $userData['username'] != $currentUserData['username']) {
+                return ['success' => false, 'message' => 'Username sudah terdaftar'];
+            }
+            
+            $userId = $this->db->update('users', $userData, "id = ?", [$currentUserData["id"]]);
+            
+            if ($userId) {
+                return ['success' => true, 'message' => 'Update berhasil', 'user_id' => $userId];
+            } else {
+                return ['success' => false, 'message' => 'Gagal mendaftar user'];
+            }
+            
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
     
     // Login user
     public function login($username, $password) {
@@ -182,6 +224,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
             case 'logout':
                 $result = $auth->logout();
+                echo json_encode($result);
+                exit;
+
+            case 'update':
+                $result = $auth->update_account($_POST);
                 echo json_encode($result);
                 exit;
         }

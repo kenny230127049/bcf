@@ -740,6 +740,7 @@ if (isset($_GET['logout'])) {
                                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($currentUser['nama_lengkap']); ?>
                             </a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="profile_saya.php">Profil Saya</a></li>
                                 <li><a class="dropdown-item" href="#lomba-saya">Lomba Saya</a></li>
                                 <li><a class="dropdown-item" href="#webinar-saya">Webinar Saya</a></li>
                                 <li><a class="dropdown-item" href="daftar.php">Daftar Lomba</a></li>
