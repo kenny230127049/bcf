@@ -11,8 +11,8 @@ $db = getDB();
 // Ambil data kategori lomba
 $kategori_lomba = $db->fetchAll("SELECT * FROM kategori_lomba WHERE status = 'aktif' ORDER BY nama");
 
-// Ambil data workshop aktif
-$workshops = $db->fetchAll("SELECT * FROM workshop WHERE status = 'aktif' ORDER BY tanggal, judul");
+// Ambil data webinar aktif
+$webinars = $db->fetchAll("SELECT * FROM webinar WHERE status = 'aktif' ORDER BY tanggal, judul");
 
 // Jika user sudah login, ambil data user
 if ($auth->isLoggedIn()) {
@@ -729,7 +729,7 @@ if (isset($_GET['logout'])) {
                             <a class="nav-link" href="#lomba-saya">Lomba Saya</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#workshop-saya">Workshop Saya</a>
+                            <a class="nav-link" href="#webinar-saya">Webinar Saya</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -741,7 +741,7 @@ if (isset($_GET['logout'])) {
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#lomba-saya">Lomba Saya</a></li>
-                                <li><a class="dropdown-item" href="#workshop-saya">Workshop Saya</a></li>
+                                <li><a class="dropdown-item" href="#webinar-saya">Webinar Saya</a></li>
                                 <li><a class="dropdown-item" href="daftar.php">Daftar Lomba</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="index.php?logout=1">Logout</a></li>
@@ -858,20 +858,20 @@ if (isset($_GET['logout'])) {
         </div>
     </section>
 
-    <!-- Workshop Section -->
-    <section id="workshop" class="py-5" style="background: #f8f9fa;">
+    <!-- Webinar Section -->
+    <section id="webinar" class="py-5" style="background: #f8f9fa;">
         <div class="container">
             <h2 class="text-center mb-5">
-                <i class="fas fa-chalkboard-teacher text-primary"></i> Workshop
+                <i class="fas fa-chalkboard-teacher text-primary"></i> Webinar
             </h2>
             <div class="row">
-                <?php if (empty($workshops)): ?>
-                    <div class="col-12 text-center text-muted">Belum ada workshop aktif.</div>
+                <?php if (empty($webinars)): ?>
+                    <div class="col-12 text-center text-muted">Belum ada webinar aktif.</div>
                 <?php endif; ?>
-                <?php foreach ($workshops as $ws): ?>
+                <?php foreach ($webinars as $ws): ?>
                 <?php
                 $kapasitas = (int)($ws['kapasitas'] ?? 0);
-                $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM workshop_pendaftar WHERE workshop_id = ?', [$ws['id']]);
+                $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM webinar_pendaftar WHERE webinar_id = ?', [$ws['id']]);
                 $terdaftar = (int)($countRow['cnt'] ?? 0);
                 $sisa = max(0, $kapasitas - $terdaftar);
                 $isFull = $kapasitas > 0 ? ($sisa <= 0) : false;
@@ -909,8 +909,8 @@ if (isset($_GET['logout'])) {
                                     $detailHref = htmlspecialchars($ws['banner_path']);
                                     $detailText = 'Poster';
                                 } else {
-                                    $detailHref = 'detail_workshop.php?id=' . urlencode($ws['id']);
-                                    $detailText = 'Detail Workshop';
+                                    $detailHref = 'detail_webinar.php?id=' . urlencode($ws['id']);
+                                    $detailText = 'Detail Webinar';
                                 }
                             ?>
                             <a href="<?= $detailHref ?>" class="btn-detail" <?= (!empty($ws['materi_pdf_path']) || !empty($ws['banner_path'])) ? 'target="_blank" rel="noopener"' : '' ?>>
@@ -926,8 +926,8 @@ if (isset($_GET['logout'])) {
                                         <i class="fas fa-users-slash"></i> Kuota Penuh
                                 </a>
                             <?php else: ?>
-                                    <a href="workshop_register.php?workshop_id=<?= $ws['id'] ?>" class="btn-daftar">
-                                        <i class="fas fa-plus"></i> Daftar Workshop
+                                    <a href="webinar_register.php?webinar_id=<?= $ws['id'] ?>" class="btn-daftar">
+                                        <i class="fas fa-plus"></i> Daftar Webinar
                                     </a>
                                 <?php endif; ?>
                             <?php else: ?>
@@ -1121,29 +1121,29 @@ if (isset($_GET['logout'])) {
             </div>
         </section>
         
-        <!-- Workshop Saya Section -->
+        <!-- Webinar Saya Section -->
         <?php 
             $currentUser = $auth->getCurrentUser();
-            $userWorkshopRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM workshop_pendaftar wp JOIN workshop w ON wp.workshop_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
+            $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM webinar_pendaftar wp JOIN webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
         ?>
-        <section id="workshop-saya" class="py-5" style="background: #ffffff;">
+        <section id="webinar-saya" class="py-5" style="background: #ffffff;">
             <div class="container">
                 <h2 class="text-center mb-5">
-                    <i class="fas fa-chalkboard-teacher text-primary"></i> Workshop Saya
+                    <i class="fas fa-chalkboard-teacher text-primary"></i> Webinar Saya
                 </h2>
                 <div class="row">
                     <div class="col-12">
-                        <?php if (empty($userWorkshopRegs)): ?>
+                        <?php if (empty($userWebinarRegs)): ?>
                             <div class="empty-state">
                                 <i class="fas fa-clipboard-list"></i>
-                                <h4>Belum ada pendaftaran workshop</h4>
-                                <p class="lead">Anda belum mendaftar ke workshop apapun. Silakan pilih workshop yang tersedia.</p>
-                                <a href="#workshop" class="btn btn-daftar">
-                                    <i class="fas fa-plus"></i> Lihat Workshop
+                                <h4>Belum ada pendaftaran webinar</h4>
+                                <p class="lead">Anda belum mendaftar ke webinar apapun. Silakan pilih webinar yang tersedia.</p>
+                                <a href="#webinar" class="btn btn-daftar">
+                                    <i class="fas fa-plus"></i> Lihat Webinar
                                 </a>
                             </div>
                         <?php else: ?>
-                            <?php foreach ($userWorkshopRegs as $wr): ?>
+                            <?php foreach ($userWebinarRegs as $wr): ?>
                                 <div class="pendaftaran-card">
                                     <div class="row align-items-center">
                                         <div class="col-md-8">
@@ -1186,7 +1186,7 @@ if (isset($_GET['logout'])) {
                                             <div class="mt-3 d-grid gap-2">
                                                 <?php if ($wr['status'] !== 'rejected'): ?>
                                                     <?php if (empty($wr['bukti_transfer'])): ?>
-                                                        <a href="workshop_payment.php?id=<?php echo urlencode($wr['id']); ?>" class="btn btn-primary">
+                                                        <a href="webinar_payment.php?id=<?php echo urlencode($wr['id']); ?>" class="btn btn-primary">
                                                             <i class="fas fa-arrow-right"></i> Lanjut Pembayaran
                                                         </a>
                                                     <?php else: ?>

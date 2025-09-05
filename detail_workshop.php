@@ -9,16 +9,16 @@ $auth = new Auth();
 $db = getDB();
 
 // Ambil ID lomba dari parameter
-$workshop_id = $_GET['id'] ?? null;
+$webinar_id = $_GET['id'] ?? null;
 
-if (!$workshop_id) {
+if (!$webinar_id) {
     header('Location: index.php');
     exit;
 }
 
 // Ambil detail lomba
-$workshop = $db->fetch("SELECT * FROM workshop WHERE id = ?", [$workshop_id]);
-if (!$workshop) {
+$webinar = $db->fetch("SELECT * FROM webinar WHERE id = ?", [$webinar_id]);
+if (!$webinar) {
     header('Location: index.php');
     exit;
 }
@@ -30,8 +30,8 @@ if ($auth->isLoggedIn()) {
     
     // Cek apakah user sudah mendaftar di lomba ini
     $sudahDaftar = $db->fetch(
-        "SELECT * FROM workshop_pendaftar WHERE user_id = ? AND workshop_id = ?",
-        [$currentUser['id'], $workshop_id]
+        "SELECT * FROM webinar_pendaftar WHERE user_id = ? AND webinar_id = ?",
+        [$currentUser['id'], $webinar_id]
     );
 }
 ?>
@@ -40,7 +40,7 @@ if ($auth->isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($workshop['nama']); ?> - LombaBCF</title>
+    <title><?php echo htmlspecialchars($webinar['nama']); ?> - LombaBCF</title>
     <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -335,10 +335,10 @@ if ($auth->isLoggedIn()) {
                         <i class="fas fa-trophy"></i>
                     </div>
                     <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInUp">
-                        <?php echo htmlspecialchars($workshop['judul']); ?>
+                        <?php echo htmlspecialchars($webinar['judul']); ?>
                     </h1>
                     <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">
-                        <?php echo htmlspecialchars($workshop['deskripsi']); ?>
+                        <?php echo htmlspecialchars($webinar['deskripsi']); ?>
                     </p>
                     
                     <?php if ($auth->isLoggedIn() && $sudahDaftar): ?>
@@ -369,29 +369,29 @@ if ($auth->isLoggedIn()) {
         <!-- Informasi Lomba -->
         <div class="content-section">
             <h2 class="section-title">
-                <i class="fas fa-info-circle"></i> Informasi Workshop
+                <i class="fas fa-info-circle"></i> Informasi Webinar
             </h2>
             
             <div class="info-grid">
                 <div class="info-card">
                     <i class="fas fa-calendar-alt"></i>
                     <h5>Tanggal</h5>
-                    <p><?php echo htmlspecialchars($workshop['tanggal'] ?? '31 Januari 2024'); ?></p>
+                    <p><?php echo htmlspecialchars($webinar['tanggal'] ?? '31 Januari 2024'); ?></p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-clock"></i>
                     <h5>Waktu</h5>
-                    <p><?php echo htmlspecialchars($workshop['waktu'] ?? '10:10'); ?></p>
+                    <p><?php echo htmlspecialchars($webinar['waktu'] ?? '10:10'); ?></p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-users"></i>
                     <h5>Pemateri</h5>
-                    <p><?php echo htmlspecialchars($workshop['pemateri'] ?? 'lejong'); ?></p>
+                    <p><?php echo htmlspecialchars($webinar['pemateri'] ?? 'lejong'); ?></p>
                 </div>
                 <div class="info-card">
                     <i class="fas fa-map-marker-alt"></i>
                     <h5>Lokasi</h5>
-                    <p><?php echo htmlspecialchars($workshop['tempat'] ?? 'Gedung BCF'); ?></p>
+                    <p><?php echo htmlspecialchars($webinar['tempat'] ?? 'Gedung BCF'); ?></p>
                 </div>
             </div>
         </div>
@@ -406,7 +406,7 @@ if ($auth->isLoggedIn()) {
                 <?php if ($auth->isLoggedIn()): ?>
                     <?php if (!$sudahDaftar): ?>
                         <a href="daftar.php?kategori=<?php echo $lomba['id']; ?>" class="btn-primary-custom">
-                            <i class="fas fa-plus"></i> Daftar Workshop
+                            <i class="fas fa-plus"></i> Daftar Webinar
                         </a>
                     <?php else: ?>
                         <span class="btn-warning-custom">

@@ -9,11 +9,11 @@ $message_type = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
     if ($_POST['action'] === 'approve') {
-        $upd = $db->update('workshop_pendaftar', ['status' => 'approved'], 'id = ?', [$id]);
+        $upd = $db->update('webinar_pendaftar', ['status' => 'approved'], 'id = ?', [$id]);
         $message = $upd ? 'Pendaftar disetujui' : 'Gagal menyetujui';
         $message_type = $upd ? 'success' : 'danger';
     } elseif ($_POST['action'] === 'reject') {
-        $upd = $db->update('workshop_pendaftar', ['status' => 'rejected'], 'id = ?', [$id]);
+        $upd = $db->update('webinar_pendaftar', ['status' => 'rejected'], 'id = ?', [$id]);
         $message = $upd ? 'Pendaftar ditolak' : 'Gagal menolak';
         $message_type = $upd ? 'success' : 'danger';
     }
@@ -21,23 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Filters
 $status = $_GET['status'] ?? '';
-$workshop_id = $_GET['workshop_id'] ?? '';
+$webinar_id = $_GET['webinar_id'] ?? '';
 $where = [];
 $params = [];
 if ($status) { $where[] = 'wp.status = ?'; $params[] = $status; }
-if ($workshop_id) { $where[] = 'wp.workshop_id = ?'; $params[] = $workshop_id; }
+if ($webinar_id) { $where[] = 'wp.webinar_id = ?'; $params[] = $webinar_id; }
 $where_clause = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
 // Fetch
-$pendaftar = $db->fetchAll("SELECT wp.*, w.judul FROM workshop_pendaftar wp JOIN workshop w ON wp.workshop_id = w.id $where_clause ORDER BY wp.created_at DESC", $params);
-$workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
+$pendaftar = $db->fetchAll("SELECT wp.*, w.judul FROM webinar_pendaftar wp JOIN webinar w ON wp.webinar_id = w.id $where_clause ORDER BY wp.created_at DESC", $params);
+$webinars = $db->fetchAll('SELECT id, judul FROM webinar ORDER BY judul ASC');
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftar Workshop - Admin</title>
+    <title>Pendaftar Webinar - Admin</title>
     <link href="../bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -64,8 +64,8 @@ $workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
                     <nav class="nav flex-column">
                         <a class="nav-link mb-2" href="index.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                         <a class="nav-link mb-2" href="manage_lomba.php"><i class="fas fa-trophy me-2"></i>Kelola Lomba</a>
-                        <a class="nav-link mb-2" href="workshop_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Workshop</a>
-                        <a class="nav-link mb-2 active" href="workshop_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Workshop</a>
+                        <a class="nav-link mb-2" href="webinar_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Webinar</a>
+                        <a class="nav-link mb-2 active" href="webinar_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Webinar</a>
                         <a class="nav-link mb-2" href="pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Lomba</a>
                         <a class="nav-link mb-2" href="kategori.php"><i class="fas fa-tags me-2"></i>Kategori Lomba</a>
                         <a class="nav-link mb-2" href="pengaturan.php"><i class="fas fa-cog me-2"></i>Pengaturan</a>
@@ -77,7 +77,7 @@ $workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
             <div class="col-md-9 col-lg-10">
                 <div class="admin-content p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Pendaftar Workshop</h2>
+                        <h2 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Pendaftar Webinar</h2>
                     </div>
 
                     <?php if ($message): ?>
@@ -96,10 +96,10 @@ $workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
                                     </select>
                                 </div>
                                 <div class="col-md-5">
-                                    <select name="workshop_id" class="form-select" onchange="this.form.submit()">
-                                        <option value="">Semua Workshop</option>
-                                        <?php foreach($workshops as $w): ?>
-                                            <option value="<?= $w['id'] ?>" <?= $workshop_id==$w['id']?'selected':'' ?>><?= htmlspecialchars($w['judul']) ?></option>
+                                    <select name="webinar_id" class="form-select" onchange="this.form.submit()">
+                                        <option value="">Semua Webinar</option>
+                                        <?php foreach($webinars as $w): ?>
+                                            <option value="<?= $w['id'] ?>" <?= $webinar_id==$w['id']?'selected':'' ?>><?= htmlspecialchars($w['judul']) ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -114,7 +114,7 @@ $workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
                                     <thead class="table-light">
                                         <tr>
                                             <th>ID</th>
-                                            <th>Workshop</th>
+                                            <th>Webinar</th>
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>Telepon</th>
@@ -147,7 +147,7 @@ $workshops = $db->fetchAll('SELECT id, judul FROM workshop ORDER BY judul ASC');
                                             <td><?= htmlspecialchars($p['metode_pembayaran'] ?? '-') ?></td>
                                             <td><span class="badge badge-status bg-<?= $p['status']==='approved'?'success':($p['status']==='rejected'?'danger':'secondary') ?>"><?= ucfirst($p['status']) ?></span></td>
                                             <td>
-                                                <a href="workshop_pendaftar_detail.php?id=<?= urlencode($p['id']) ?>" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-info-circle"></i></a>
+                                                <a href="webinar_pendaftar_detail.php?id=<?= urlencode($p['id']) ?>" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-info-circle"></i></a>
                                                 <form method="post" class="d-inline">
                                                     <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                                     <button name="action" value="approve" class="btn btn-sm btn-success" <?= $p['status']==='approved'?'disabled':'' ?>><i class="fas fa-check"></i></button>

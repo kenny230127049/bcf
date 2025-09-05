@@ -7,7 +7,7 @@ $auth = new Auth();
 $db = getDB();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.php#workshop');
+    header('Location: index.php#webinar');
     exit;
 }
 
@@ -17,21 +17,21 @@ if (!$auth->isLoggedIn()) {
 }
 
 $user = $auth->getCurrentUser();
-$workshop_id = intval($_POST['workshop_id'] ?? 0);
+$webinar_id = intval($_POST['webinar_id'] ?? 0);
 
-// Validate workshop
-$ws = $db->fetch('SELECT * FROM workshop WHERE id = ? AND status = "aktif"', [$workshop_id]);
+// Validate webinar
+$ws = $db->fetch('SELECT * FROM webinar WHERE id = ? AND status = "aktif"', [$webinar_id]);
 if (!$ws) {
-    $_SESSION['flash_error'] = 'Workshop tidak ditemukan atau nonaktif';
-    header('Location: index.php#workshop');
+    $_SESSION['flash_error'] = 'Webinar tidak ditemukan atau nonaktif';
+    header('Location: index.php#webinar');
     exit;
 }
 
 // Prevent duplicate registration
-$existing = $db->fetch('SELECT id FROM workshop_pendaftar WHERE user_id = ? AND workshop_id = ?', [$user['id'], $workshop_id]);
+$existing = $db->fetch('SELECT id FROM webinar_pendaftar WHERE user_id = ? AND webinar_id = ?', [$user['id'], $webinar_id]);
 if ($existing) {
-    $_SESSION['flash_error'] = 'Anda sudah mendaftar workshop ini';
-    header('Location: index.php#workshop');
+    $_SESSION['flash_error'] = 'Anda sudah mendaftar webinar ini';
+    header('Location: index.php#webinar');
     exit;
 }
 
@@ -41,7 +41,7 @@ $reg_id = 'WS' . date('ymdHis') . rand(10,99);
 $data = [
     'id' => $reg_id,
     'user_id' => $user['id'],
-    'workshop_id' => $workshop_id,
+    'webinar_id' => $webinar_id,
     'nama' => $user['nama_lengkap'],
     'email' => $user['email'],
     'telepon' => $user['telepon'] ?? '',
@@ -51,14 +51,14 @@ $data = [
     'bukti_transfer' => null,
 ];
 
-$ok = $db->insert('workshop_pendaftar', $data);
+$ok = $db->insert('webinar_pendaftar', $data);
 if ($ok) {
-    // Langsung arahkan ke halaman pembayaran QRIS untuk workshop
-    header('Location: workshop_payment.php?id=' . urlencode($reg_id));
+    // Langsung arahkan ke halaman pembayaran QRIS untuk webinar
+    header('Location: webinar_payment.php?id=' . urlencode($reg_id));
     exit;
 } else {
-    $_SESSION['flash_error'] = 'Gagal mendaftar workshop.';
-    header('Location: index.php#workshop');
+    $_SESSION['flash_error'] = 'Gagal mendaftar webinar.';
+    header('Location: index.php#webinar');
     exit;
 }
 ?>

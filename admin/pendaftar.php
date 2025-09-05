@@ -155,11 +155,11 @@ $rejected_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM pendaftar WHERE 
                         <a class="nav-link mb-2" href="manage_lomba.php">
                             <i class="fas fa-trophy me-2"></i>Kelola Lomba
                         </a>
-                        <a class="nav-link mb-2" href="workshop_manage.php">
-                            <i class="fas fa-chalkboard-teacher me-2"></i>Kelola Workshop
+                        <a class="nav-link mb-2" href="webinar_manage.php">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Kelola Webinar
                         </a>
-                        <a class="nav-link mb-2" href="workshop_pendaftar.php">
-                            <i class="fas fa-users me-2"></i>Pendaftar Workshop
+                        <a class="nav-link mb-2" href="webinar_pendaftar.php">
+                            <i class="fas fa-users me-2"></i>Pendaftar Webinar
                         </a>
                         <a class="nav-link active mb-2" href="pendaftar.php">
                             <i class="fas fa-users me-2"></i>Pendaftar

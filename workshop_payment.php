@@ -8,8 +8,8 @@ if (!$auth->isLoggedIn()) { header('Location: login.php'); exit; }
 
 $db = getDB();
 $id = $_GET['id'] ?? '';
-$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya FROM workshop_pendaftar wp JOIN workshop w ON wp.workshop_id = w.id WHERE wp.id = ?', [$id]);
-if (!$reg) { header('Location: index.php#workshop'); exit; }
+$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya FROM webinar_pendaftar wp JOIN webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
+if (!$reg) { header('Location: index.php#webinar'); exit; }
 
 $message = '';
 $type = '';
@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$message) {
         $updData = ['metode_pembayaran' => $metode];
         if ($bukti_path) { $updData['bukti_transfer'] = $bukti_path; }
-        $upd = $db->update('workshop_pendaftar', $updData, 'id = ?', [$id]);
+        $upd = $db->update('webinar_pendaftar', $updData, 'id = ?', [$id]);
         if ($upd !== false) {
-            header('Location: workshop_success.php?id=' . urlencode($id));
+            header('Location: webinar_success.php?id=' . urlencode($id));
             exit;
         } else {
             $message = 'Gagal menyimpan pembayaran'; $type = 'danger';
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran Workshop - <?= htmlspecialchars($reg['judul']) ?></title>
+    <title>Pembayaran Webinar - <?= htmlspecialchars($reg['judul']) ?></title>
     <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="container" style="margin-top: 100px;">
         <div class="payment-container animate__animated animate__fadeInUp">
-            <h2 class="text-center mb-4"><i class="fas fa-credit-card me-2"></i>Pembayaran Workshop</h2>
+            <h2 class="text-center mb-4"><i class="fas fa-credit-card me-2"></i>Pembayaran Webinar</h2>
             <div class="summary-card">
                 <div class="row">
                     <div class="col-md-8">
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="form-text">Format JPG/PNG/WEBP, maks 5MB</div>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <a href="index.php#workshop" class="btn btn-outline-secondary me-2">Kembali</a>
+                                    <a href="index.php#webinar" class="btn btn-outline-secondary me-2">Kembali</a>
                                     <button type="submit" class="btn btn-primary">Simpan Pembayaran</button>
                                 </div>
                             </form>

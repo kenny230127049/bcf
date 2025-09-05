@@ -8,15 +8,15 @@ if (!$auth->isLoggedIn()) { header('Location: login.php'); exit; }
 
 $db = getDB();
 $id = $_GET['id'] ?? '';
-$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya, w.tanggal, w.waktu, w.lokasi FROM workshop_pendaftar wp JOIN workshop w ON wp.workshop_id = w.id WHERE wp.id = ?', [$id]);
-if (!$reg) { header('Location: index.php#workshop'); exit; }
+$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya, w.tanggal, w.waktu, w.lokasi FROM webinar_pendaftar wp JOIN webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
+if (!$reg) { header('Location: index.php#webinar'); exit; }
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran Berhasil - Workshop</title>
+    <title>Pembayaran Berhasil - Webinar</title>
     <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -63,7 +63,7 @@ if (!$reg) { header('Location: index.php#workshop'); exit; }
                 </div>
             </div>
             <div class="mt-4">
-                <a href="index.php#workshop" class="btn btn-primary"><i class="fas fa-home me-2"></i>Kembali ke Beranda</a>
+                <a href="index.php#webinar" class="btn btn-primary"><i class="fas fa-home me-2"></i>Kembali ke Beranda</a>
             </div>
         </div>
     </div>

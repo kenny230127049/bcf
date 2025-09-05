@@ -3,15 +3,15 @@ require_once 'check_auth.php';
 
 $db = getDB();
 $id = $_GET['id'] ?? '';
-$p = $db->fetch('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM workshop_pendaftar wp JOIN workshop w ON wp.workshop_id = w.id WHERE wp.id = ?', [$id]);
-if (!$p) { header('Location: workshop_pendaftar.php'); exit; }
+$p = $db->fetch('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM webinar_pendaftar wp JOIN webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
+if (!$p) { header('Location: webinar_pendaftar.php'); exit; }
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Pendaftar Workshop</title>
+    <title>Detail Pendaftar Webinar</title>
     <link href="../bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -34,8 +34,8 @@ if (!$p) { header('Location: workshop_pendaftar.php'); exit; }
                     <nav class="nav flex-column">
                         <a class="nav-link mb-2" href="index.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                         <a class="nav-link mb-2" href="manage_lomba.php"><i class="fas fa-trophy me-2"></i>Kelola Lomba</a>
-                        <a class="nav-link mb-2" href="workshop_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Workshop</a>
-                        <a class="nav-link mb-2 active" href="workshop_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Workshop</a>
+                        <a class="nav-link mb-2" href="webinar_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Webinar</a>
+                        <a class="nav-link mb-2 active" href="webinar_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Webinar</a>
                         <a class="nav-link mb-2" href="pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Lomba</a>
                         <a class="nav-link mb-2" href="kategori.php"><i class="fas fa-tags me-2"></i>Kategori Lomba</a>
                         <a class="nav-link mb-2" href="pengaturan.php"><i class="fas fa-cog me-2"></i>Pengaturan</a>
@@ -47,12 +47,12 @@ if (!$p) { header('Location: workshop_pendaftar.php'); exit; }
             <div class="col-md-9 col-lg-10">
                 <div class="admin-content p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0"><i class="fas fa-user me-2 text-primary"></i>Detail Pendaftar Workshop</h2>
-                        <a href="workshop_pendaftar.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Kembali</a>
+                        <h2 class="mb-0"><i class="fas fa-user me-2 text-primary"></i>Detail Pendaftar Webinar</h2>
+                        <a href="webinar_pendaftar.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Kembali</a>
                     </div>
 
                     <div class="row">
-                        <!-- Informasi Pendaftar & Workshop -->
+                        <!-- Informasi Pendaftar & Webinar -->
                         <div class="col-lg-8">
                             <div class="card mb-4">
                                 <div class="card-header bg-white border-0">
@@ -77,10 +77,10 @@ if (!$p) { header('Location: workshop_pendaftar.php'); exit; }
                                     </div>
 
                                     <hr>
-                                    <h6 class="mb-3"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Informasi Workshop</h6>
+                                    <h6 class="mb-3"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Informasi Webinar</h6>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p><strong>Judul Workshop:</strong><br><?= htmlspecialchars($p['judul']) ?></p>
+                                            <p><strong>Judul Webinar:</strong><br><?= htmlspecialchars($p['judul']) ?></p>
                                             <p><strong>Lokasi:</strong><br><?= htmlspecialchars($p['lokasi'] ?? '-') ?></p>
                                         </div>
                                         <div class="col-md-6">
@@ -131,7 +131,7 @@ if (!$p) { header('Location: workshop_pendaftar.php'); exit; }
                                     <h5 class="mb-0"><i class="fas fa-cogs me-2 text-primary"></i>Aksi Admin</h5>
                                 </div>
                                 <div class="card-body">
-                                    <form method="post" action="workshop_pendaftar.php" class="d-grid gap-2">
+                                    <form method="post" action="webinar_pendaftar.php" class="d-grid gap-2">
                                         <input type="hidden" name="id" value="<?= htmlspecialchars($p['id']) ?>">
                                         <button name="action" value="approve" class="btn btn-success" onclick="return confirm('Setujui pendaftar ini?')">
                                             <i class="fas fa-check me-2"></i>Setujui

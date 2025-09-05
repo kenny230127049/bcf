@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         // Handle uploads
-        $upload_base = __DIR__ . '/../uploads/workshop/';
+        $upload_base = __DIR__ . '/../uploads/webinar/';
         if (!is_dir($upload_base)) {
             @mkdir($upload_base, 0777, true);
         }
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($ext, ['jpg','jpeg','png','gif','webp'])) {
                 $target = $upload_base . 'banner_' . time() . '.' . $ext;
                 if (move_uploaded_file($_FILES['banner']['tmp_name'], $target)) {
-                    $rel = 'uploads/workshop/' . basename($target);
+                    $rel = 'uploads/webinar/' . basename($target);
                     $data['banner_path'] = $rel;
                 }
             }
@@ -55,31 +55,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Materi PDF dihilangkan sesuai permintaan (tidak ada upload PDF)
 
         if ($action === 'create') {
-            $res = $db->insert('workshop', $data);
-            if ($res) { $message = 'Workshop berhasil ditambahkan'; $message_type = 'success'; }
-            else { $message = 'Gagal menambahkan workshop'; $message_type = 'danger'; }
+            $res = $db->insert('webinar', $data);
+            if ($res) { $message = 'Webinar berhasil ditambahkan'; $message_type = 'success'; }
+            else { $message = 'Gagal menambahkan webinar'; $message_type = 'danger'; }
         } else {
-            $res = $db->update('workshop', $data, 'id = ?', [$id]);
-            if ($res !== false) { $message = 'Workshop berhasil diperbarui'; $message_type = 'success'; }
-            else { $message = 'Gagal memperbarui workshop'; $message_type = 'danger'; }
+            $res = $db->update('webinar', $data, 'id = ?', [$id]);
+            if ($res !== false) { $message = 'Webinar berhasil diperbarui'; $message_type = 'success'; }
+            else { $message = 'Gagal memperbarui webinar'; $message_type = 'danger'; }
         }
     } elseif ($action === 'delete') {
         $id = intval($_POST['id'] ?? 0);
-        $deleted = $db->delete('workshop', 'id = ?', [$id]);
-        if ($deleted) { $message = 'Workshop dihapus'; $message_type = 'success'; }
-        else { $message = 'Gagal menghapus workshop'; $message_type = 'danger'; }
+        $deleted = $db->delete('webinar', 'id = ?', [$id]);
+        if ($deleted) { $message = 'Webinar dihapus'; $message_type = 'success'; }
+        else { $message = 'Gagal menghapus webinar'; $message_type = 'danger'; }
     }
 }
 
 // Fetch list
-$list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
+$list = $db->fetchAll('SELECT * FROM webinar ORDER BY created_at DESC');
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Workshop - Admin</title>
+    <title>Kelola Webinar - Admin</title>
     <link href="../bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -106,8 +106,8 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
                     <nav class="nav flex-column">
                         <a class="nav-link mb-2" href="index.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                         <a class="nav-link mb-2" href="manage_lomba.php"><i class="fas fa-trophy me-2"></i>Kelola Lomba</a>
-                        <a class="nav-link mb-2 active" href="workshop_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Workshop</a>
-                        <a class="nav-link mb-2" href="workshop_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Workshop</a>
+                        <a class="nav-link mb-2 active" href="webinar_manage.php"><i class="fas fa-chalkboard-teacher me-2"></i>Kelola Webinar</a>
+                        <a class="nav-link mb-2" href="webinar_pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Webinar</a>
                         <a class="nav-link mb-2" href="pendaftar.php"><i class="fas fa-users me-2"></i>Pendaftar Lomba</a>
                         <a class="nav-link mb-2" href="kategori.php"><i class="fas fa-tags me-2"></i>Kategori Lomba</a>
                         <a class="nav-link mb-2" href="pengaturan.php"><i class="fas fa-cog me-2"></i>Pengaturan</a>
@@ -119,8 +119,8 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
             <div class="col-md-9 col-lg-10">
                 <div class="admin-content p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Kelola Workshop</h2>
-                        <button class="btn btn-primary btn-admin" data-bs-toggle="modal" data-bs-target="#wsModal"><i class="fas fa-plus me-2"></i>Tambah Workshop</button>
+                        <h2 class="mb-0"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Kelola Webinar</h2>
+                        <button class="btn btn-primary btn-admin" data-bs-toggle="modal" data-bs-target="#wsModal"><i class="fas fa-plus me-2"></i>Tambah Webinar</button>
                     </div>
 
                     <?php if ($message): ?>
@@ -128,7 +128,7 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
                     <?php endif; ?>
 
                     <div class="card">
-                        <div class="card-header bg-primary text-white"><strong>Daftar Workshop</strong></div>
+                        <div class="card-header bg-primary text-white"><strong>Daftar Webinar</strong></div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover table-striped table-bordered table-sm align-middle">
@@ -152,7 +152,7 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
                                             <td><span class="badge bg-<?= $w['status']==='aktif'?'success':'secondary' ?>"><?= ucfirst($w['status']) ?></span></td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" onclick='editWS(<?= json_encode($w, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_AMP|JSON_HEX_QUOT) ?>)'><i class="fas fa-edit"></i></button>
-                                                <form method="post" class="d-inline" onsubmit="return confirm('Hapus workshop ini?')">
+                                                <form method="post" class="d-inline" onsubmit="return confirm('Hapus webinar ini?')">
                                                     <input type="hidden" name="action" value="delete">
                                                     <input type="hidden" name="id" value="<?= $w['id'] ?>">
                                                     <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -177,7 +177,7 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
             <div class="modal-content">
                 <form method="post" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h5 class="modal-title"><i class="fas fa-chalkboard-teacher me-2"></i><span id="wsModalTitle">Tambah Workshop</span></h5>
+                        <h5 class="modal-title"><i class="fas fa-chalkboard-teacher me-2"></i><span id="wsModalTitle">Tambah Webinar</span></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -271,7 +271,7 @@ $list = $db->fetchAll('SELECT * FROM workshop ORDER BY created_at DESC');
     <script src="../bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function editWS(w){
-            document.getElementById('wsModalTitle').innerText = 'Edit Workshop';
+            document.getElementById('wsModalTitle').innerText = 'Edit Webinar';
             document.getElementById('wsAction').value = 'update';
             document.getElementById('wsId').value = w.id;
             document.getElementById('wsJudul').value = w.judul || '';

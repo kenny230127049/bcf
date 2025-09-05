@@ -8,9 +8,9 @@ if (!$auth->isLoggedIn()) { header('Location: login.php'); exit; }
 
 $db = getDB();
 $user = $auth->getCurrentUser();
-$workshop_id = intval($_GET['workshop_id'] ?? $_POST['workshop_id'] ?? 0);
-$ws = $db->fetch('SELECT * FROM workshop WHERE id = ? AND status = "aktif"', [$workshop_id]);
-if (!$ws) { header('Location: index.php#workshop'); exit; }
+$webinar_id = intval($_GET['webinar_id'] ?? $_POST['webinar_id'] ?? 0);
+$ws = $db->fetch('SELECT * FROM webinar WHERE id = ? AND status = "aktif"', [$webinar_id]);
+if (!$ws) { header('Location: index.php#webinar'); exit; }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,10 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Nama dan email wajib diisi';
     } else {
         // Prevent duplicate
-        $existing = $db->fetch('SELECT id FROM workshop_pendaftar WHERE user_id = ? AND workshop_id = ?', [$user['id'], $workshop_id]);
+        $existing = $db->fetch('SELECT id FROM webinar_pendaftar WHERE user_id = ? AND webinar_id = ?', [$user['id'], $webinar_id]);
         if ($existing) {
-            // Sudah pernah mendaftar: arahkan langsung ke pembayaran workshop
-            header('Location: workshop_payment.php?id=' . urlencode($existing['id']));
+            // Sudah pernah mendaftar: arahkan langsung ke pembayaran webinar
+            header('Location: webinar_payment.php?id=' . urlencode($existing['id']));
             exit;
         }
 
@@ -34,16 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'id' => $reg_id,
             'user_id' => $user['id'],
-            'workshop_id' => $workshop_id,
+            'webinar_id' => $webinar_id,
             'nama' => $nama,
             'email' => $email,
             'telepon' => $telepon,
             'institusi' => $institusi,
             'status' => 'pending',
         ];
-        $ok = $db->insert('workshop_pendaftar', $data);
+        $ok = $db->insert('webinar_pendaftar', $data);
         if ($ok) {
-            header('Location: workshop_payment.php?id=' . urlencode($reg_id));
+            header('Location: webinar_payment.php?id=' . urlencode($reg_id));
             exit;
         } else {
             $error = 'Gagal menyimpan pendaftaran';
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Workshop - <?= htmlspecialchars($ws['judul']) ?></title>
+    <title>Daftar Webinar - <?= htmlspecialchars($ws['judul']) ?></title>
     <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="container" style="margin-top: 100px;">
         <div class="register-container animate__animated animate__fadeInUp">
-            <h2 class="text-center mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>Form Pendaftaran Workshop</h2>
+            <h2 class="text-center mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>Form Pendaftaran Webinar</h2>
             <div class="summary-card">
                 <div class="row">
                     <div class="col-md-8">
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card-body">
                             <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
                             <form method="post">
-                                <input type="hidden" name="workshop_id" value="<?= $workshop_id ?>">
+                                <input type="hidden" name="webinar_id" value="<?= $webinar_id ?>">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <a href="index.php#workshop" class="btn btn-outline-secondary me-2">Batal</a>
+                                    <a href="index.php#webinar" class="btn btn-outline-secondary me-2">Batal</a>
                                     <button type="submit" class="btn btn-primary">Lanjut ke Pembayaran</button>
                                 </div>
                             </form>
