@@ -276,7 +276,7 @@ if (isset($_GET['logout'])) {
         }
         
         .stats-pending { background: linear-gradient(45deg, #ffc107, #ff9800); }
-        .stats-approved { background: linear-gradient(45deg, #28a745, #20c997); }
+        .stats-confirmed { background: linear-gradient(45deg, #28a745, #20c997); }
         .stats-rejected { background: linear-gradient(45deg, #dc3545, #e74c3c); }
         
         .pendaftaran-card {
@@ -302,7 +302,7 @@ if (isset($_GET['logout'])) {
         }
         
         .status-pending { background: #fff3cd; color: #856404; }
-        .status-approved { background: #d4edda; color: #155724; }
+        .status-confirmed { background: #d4edda; color: #155724; }
         .status-rejected { background: #f8d7da; color: #721c24; }
         
         .btn-daftar {
@@ -1095,7 +1095,7 @@ if (isset($_GET['logout'])) {
                                                     case 'pending': 
                                                         echo '<i class="fas fa-clock"></i> Menunggu Approval'; 
                                                         break;
-                                                    case 'approved': 
+                                                    case 'confirmed': 
                                                         echo '<i class="fas fa-check"></i> Diterima'; 
                                                         break;
                                                     case 'rejected': 
