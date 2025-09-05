@@ -23,6 +23,8 @@ $pendaftar = $db->fetch("
     WHERE p.id = ?
 ", [$pendaftar_id]);
 
+$info_kategori = $db->fetch("SELECT * FROM kategori_lomba WHERE id = ?", [$pendaftar['kategori_lomba_id']]);
+
 if (!$payment || !$pendaftar) {
     header('Location: index.php');
     exit;
@@ -252,6 +254,7 @@ if (!$payment || !$pendaftar) {
                     <li>Setelah verifikasi, Anda akan menerima email konfirmasi</li>
                     <li>Informasi pengumpulan karya akan dikirim melalui email</li>
                     <li>Jangan lupa untuk memeriksa email Anda secara berkala</li>
+                    <li>Join grup WhatsApp untuk menerima info lebih lanjut: <a href="<?= $info_kategori['link_grup_wa'] ?>"><?= $info_kategori['link_grup_wa'] ?></a></li>
                 </ul>
             </div>
             

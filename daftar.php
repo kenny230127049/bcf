@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email'] ?? '');
     $telepon = trim($_POST['telepon'] ?? '');
     $sekolah = trim($_POST['sekolah'] ?? '');
-    $kelas = $_POST['kelas'] ?? '';
+    $kelas = trim($_POST['kelas'] ?? '');
     $alamat = trim($_POST['alamat'] ?? '');
     
     // Validate required fields
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
             // Redirect to success page
-            header("Location: sukses.php?pendaftar_id=" . $pendaftar_id);
+            header("Location: payment.php?pendaftar_id=" . $pendaftar_id);
             exit;
         } else {
             $error = 'Gagal mendaftar. Silakan coba lagi.';
@@ -432,12 +432,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Kelas *</label>
-                                    <select class="form-select" name="anggota_kelas_${i}" required>
-                                        <option value="">Pilih Kelas</option>
-                                        <option value="VII">Kelas VII</option>
-                                        <option value="VIII">Kelas VIII</option>
-                                        <option value="IX">Kelas IX</option>
-                                    </select>
+                                    <input type="text" class="form-control" name="anggota_kelas_${i}" required>
                                 </div>
                             </div>
                             <div class="col-md-6">

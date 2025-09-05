@@ -33,8 +33,6 @@ class Auth {
                 'email' => $data['email'],
                 'password' => $hashedPassword,
                 'nama_lengkap' => $data['nama_lengkap'],
-                'sekolah' => $data['sekolah'],
-                'kelas' => $data['kelas'],
                 'telepon' => $data['telepon'],
                 'alamat' => $data['alamat']
             ];
@@ -113,8 +111,8 @@ class Auth {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
-                $_SESSION['sekolah'] = $user['sekolah'];
-                $_SESSION['kelas'] = $user['kelas'];
+                // $_SESSION['sekolah'] = $user['sekolah'];
+                // $_SESSION['kelas'] = $user['kelas'];
                 $_SESSION['is_logged_in'] = true;
                 
                 return ['success' => true, 'message' => 'Login berhasil', 'user' => $user];

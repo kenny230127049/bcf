@@ -141,6 +141,7 @@ CREATE TABLE `kategori_lomba` (
   `jenis_lomba` enum('individu','kelompok') DEFAULT 'individu',
   `max_peserta` int(11) DEFAULT 1,
   `butuh_kartu_pelajar` tinyint(1) DEFAULT 0,
+  `link_grup_wa` varchar(255) DEFAULT NULL,
   `status` enum('aktif','nonaktif') DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
@@ -157,8 +158,8 @@ LOCK TABLES `kategori_lomba` WRITE;
 /*!40000 ALTER TABLE `kategori_lomba` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `kategori_lomba` VALUES
-(3,'Robotik','Tuangkan ide kreatifmu dalam bentuk cerita pendek. Lomba ini memberikan kesempatan bagi siswa untuk mengekspresikan pikiran dan perasaan mereka.',NULL,NULL,NULL,NULL,25000.00,'fas fa-pen-fancy','kelompok',3,1,'aktif','2025-09-03 02:17:43'),
-(5,'Lomba Desain Grafis','Buat desain grafis yang menarik untuk poster kampanye lingkungan. Lomba ini mendorong siswa untuk bekerja sama dalam tim untuk menghasilkan desain yang kreatif dan bermakna.','7 september - 3 januari','Siswa SMP - SMA SMK Sederajat','4 jam','Smk budi luhur',80000.00,'fas fa-paint-brush','individu',2,1,'aktif','2025-09-03 02:17:43');
+(3,'Robotik','Tuangkan ide kreatifmu dalam bentuk cerita pendek. Lomba ini memberikan kesempatan bagi siswa untuk mengekspresikan pikiran dan perasaan mereka.',NULL,NULL,NULL,NULL,25000.00,'fas fa-pen-fancy','kelompok',3,1,'wa.meme','aktif','2025-09-03 02:17:43'),
+(5,'Lomba Desain Grafis','Buat desain grafis yang menarik untuk poster kampanye lingkungan. Lomba ini mendorong siswa untuk bekerja sama dalam tim untuk menghasilkan desain yang kreatif dan bermakna.','7 september - 3 januari','Siswa SMP - SMA SMK Sederajat','4 jam','Smk budi luhur',80000.00,'fas fa-paint-brush','individu',2,1,'https://www.youtube.com/watch?v=dQw4w9WgXcQ','aktif','2025-09-03 02:17:43');
 /*!40000 ALTER TABLE `kategori_lomba` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -194,7 +195,8 @@ LOCK TABLES `pembayaran` WRITE;
 /*!40000 ALTER TABLE `pembayaran` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `pembayaran` VALUES
-('PAY20250903023140409','P202509034003','QRIS',80000.00,'pending','bukti_transfer1756866700_travis-scott-fish-meme-.jpg',NULL,'2025-09-03 02:31:40');
+('PAY20250903023140409','P202509034003','QRIS',80000.00,'pending','bukti_transfer1756866700_travis-scott-fish-meme-.jpg',NULL,'2025-09-03 02:31:40'),
+('PAY20250905131818357','P202509059988','QRIS',80000.00,'pending','bukti_transfer1757078298_golshi-in-a-different-file-format.png',NULL,'2025-09-05 13:18:18');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -212,7 +214,7 @@ CREATE TABLE `pendaftar` (
   `email` varchar(100) NOT NULL,
   `telepon` varchar(20) NOT NULL,
   `sekolah` varchar(100) NOT NULL,
-  `kelas` enum('VII','VIII','IX') NOT NULL,
+  `kelas` varchar(100) NOT NULL,
   `alamat` text NOT NULL,
   `kategori_lomba_id` int(11) NOT NULL,
   `foto_kartu_pelajar` varchar(255) DEFAULT NULL,
@@ -235,7 +237,8 @@ LOCK TABLES `pendaftar` WRITE;
 /*!40000 ALTER TABLE `pendaftar` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `pendaftar` VALUES
-('P202509034003','Dzulfikar Dava fachreza','davafachreza07@gmail.com','087780195230','SMK BUDI LUHUR','VIII','Jl. Raden Saleh No.999, RT.001/RW.003, Karang Tengah, Kec. Karang Tengah, Kota Tangerang, Banten 15157',5,'P202509034003_1756866667_WhatsApp Image 2025-08-27 at 11.52.13_3896e19a.jpg','confirmed',NULL,'2025-09-03 02:31:07');
+('P202509034003','Dzulfikar Dava fachreza','davafachreza07@gmail.com','087780195230','SMK BUDI LUHUR','VIII','Jl. Raden Saleh No.999, RT.001/RW.003, Karang Tengah, Kec. Karang Tengah, Kota Tangerang, Banten 15157',5,'P202509034003_1756866667_WhatsApp Image 2025-08-27 at 11.52.13_3896e19a.jpg','confirmed',NULL,'2025-09-03 02:31:07'),
+('P202509059988','asdf','asdf@asdf.asdf','123','asdf','asdf','AAAAAAaA',5,'P202509059988_1757078291_JavaScript-Emblem-2991555472.png','pending',NULL,'2025-09-05 13:18:11');
 /*!40000 ALTER TABLE `pendaftar` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -303,7 +306,7 @@ CREATE TABLE `user_pendaftaran` (
   KEY `kategori_lomba_id` (`kategori_lomba_id`),
   CONSTRAINT `user_pendaftaran_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `user_pendaftaran_ibfk_2` FOREIGN KEY (`kategori_lomba_id`) REFERENCES `kategori_lomba` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,6 +316,12 @@ CREATE TABLE `user_pendaftaran` (
 LOCK TABLES `user_pendaftaran` WRITE;
 /*!40000 ALTER TABLE `user_pendaftaran` DISABLE KEYS */;
 set autocommit=0;
+INSERT INTO `user_pendaftaran` VALUES
+(1,2,'P202509052160',5,'pending','2025-09-05 09:39:48',NULL,NULL),
+(2,2,'P202509051585',3,'pending','2025-09-05 09:41:50',NULL,NULL),
+(6,6,'P202509051428',5,'pending','2025-09-05 10:51:06',NULL,NULL),
+(7,6,'P202509053315',3,'pending','2025-09-05 11:07:00',NULL,NULL),
+(8,8,'P202509059988',5,'pending','2025-09-05 13:18:11',NULL,NULL);
 /*!40000 ALTER TABLE `user_pendaftaran` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -340,7 +349,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,7 +361,10 @@ LOCK TABLES `users` WRITE;
 set autocommit=0;
 INSERT INTO `users` VALUES
 (1,'angga','angga@gmail.com','$2y$10$8gBadGCGtA4RM2/R3/Qp0eRdAw9kZ1pUFZR9ysALnTdXdiZi6iL9y','angga faot','SMK BUDI LUHUR','VII','087780195230','Jl. Raden Saleh No.999, RT.001/RW.003, Karang Tengah, Kec. Karang Tengah, Kota Tangerang, Banten 15157',1,'2025-09-03 05:04:22','2025-09-03 05:04:22'),
-(2,'workshoptest1','workshoptest1@workshop.test','$2y$12$GZE61CYVec/EPvkHV5YQQOloLiZyGizE5fEdMQEPillIlCm7PFKfS','workshop test1','smk workshop test tangerang','VII','1234','',1,'2025-09-04 09:52:59','2025-09-05 09:12:33');
+(2,'workshoptest1','workshoptest1@workshop.test','$2y$12$GZE61CYVec/EPvkHV5YQQOloLiZyGizE5fEdMQEPillIlCm7PFKfS','workshop test1','smk workshop test tangerang','VII','1234','',1,'2025-09-04 09:52:59','2025-09-05 09:12:33'),
+(6,'mas','mas@gmail.com','$2y$12$1gT/Eaud9iaMTFFzzc.oL.Kr10lTC10go2ZoYBO0HwB/gAfyQIJAq','mas',NULL,NULL,'123','mas123',1,'2025-09-05 10:35:44','2025-09-05 10:35:44'),
+(7,'asdf','asdf@asdf.asdf','$2y$12$p2xeQBkfTCtE/RjKCV7wbO/4oQHDkqMe1mMN7ND9JbWHG73uXrvei','asdf',NULL,NULL,'1234','asdf',1,'2025-09-05 10:36:28','2025-09-05 10:36:28'),
+(8,'yangbeneraja','yangbeneraja@gmail.com','$2y$12$lVngk5FzN2JNfMoeREraDelxM5/6ZwoHLQ3ksS1f1kkgxRLILVeuC','yang bener aja',NULL,NULL,'1234','asdf',1,'2025-09-05 12:53:47','2025-09-05 12:53:47');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -431,7 +443,7 @@ LOCK TABLES `webinar_pendaftar` WRITE;
 set autocommit=0;
 INSERT INTO `webinar_pendaftar` VALUES
 ('WS25090308052852',1,1,'angga faot','angga@gmail.com','087780195230','SMK BUDI LUHUR','approved','QRIS','uploads/bukti_transfer/bukti_transfer_1756907154_travis-scott-fish-meme-.jpg','2025-09-03 08:05:28'),
-('WS25090409533726',2,1,'workshop test','workshoptest@workshop.test','','smk workshop test tangerang','pending','QRIS','uploads/bukti_transfer/bukti_transfer_1756989649_bcf.jpg','2025-09-04 09:53:37');
+('WS25090409533726',2,1,'workshop test','workshoptest@workshop.test','','smk workshop test tangerang','pending','QRIS','uploads/bukti_transfer/bukti_transfer_1757064409_4c5-2295580792.jpg','2025-09-04 09:53:37');
 /*!40000 ALTER TABLE `webinar_pendaftar` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -445,4 +457,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-09-05 16:16:35
+-- Dump completed on 2025-09-05 20:19:43

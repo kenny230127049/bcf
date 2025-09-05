@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $max_peserta = intval($_POST['max_peserta'] ?? 1);
         $status = $_POST['status'] ?? 'aktif';
         $butuh_kartu_pelajar = $_POST['butuh_kartu_pelajar'] ?? 0;
+        $link_grup_wa = $_POST['link_grup_wa'] ?? '';
         
         if (empty($nama) || empty($deskripsi) || $biaya <= 0) {
             $message = 'Semua field harus diisi dengan benar!';
@@ -41,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     'jenis_lomba' => $jenis_lomba,
                     'max_peserta' => $max_peserta,
                     'status' => $status,
-                    'butuh_kartu_pelajar' => $butuh_kartu_pelajar
+                    'butuh_kartu_pelajar' => $butuh_kartu_pelajar,
+                    'link_grup_wa' => $link_grup_wa,
                 ];
                 $result = $db->insert('kategori_lomba', $data);
                 
@@ -62,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     'jenis_lomba' => $jenis_lomba,
                     'max_peserta' => $max_peserta,
                     'status' => $status,
-                    'butuh_kartu_pelajar' => $butuh_kartu_pelajar
+                    'butuh_kartu_pelajar' => $butuh_kartu_pelajar,
+                    'link_grup_wa' => $link_grup_wa,
                 ];
                 $result = $db->update('kategori_lomba', $data, 'id = ?', [$id]);
                 
@@ -335,6 +338,11 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
                                 <option value="aktif" <?= ($edit_kategori['status'] ?? '') == 'aktif' ? 'selected' : '' ?>>Aktif</option>
                                 <option value="nonaktif" <?= ($edit_kategori['status'] ?? '') == 'nonaktif' ? 'selected' : '' ?>>Nonaktif</option>
                             </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="link_grup_wa">Link Grup WhatsApp</label>
+                            <input type="text" class="form-control" id="link_grup_wa" name="link_grup_wa" value="<?= $edit_kategori['link_grup_wa'] ?? '' ?>">
                         </div>
 
                         <div class="mb-3">

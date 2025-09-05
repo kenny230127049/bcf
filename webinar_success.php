@@ -62,6 +62,11 @@ if (!$reg) { header('Location: index.php#webinar'); exit; }
                     </div>
                 </div>
             </div>
+
+            <div class="mt-2">
+                Silahkan masuk grup WhatsApp untuk mendapatkan informasi lebih lanjut:<br><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">https://wa.me/1234567890</a>
+            </div>
+
             <div class="mt-4">
                 <a href="index.php#webinar" class="btn btn-primary"><i class="fas fa-home me-2"></i>Kembali ke Beranda</a>
             </div>

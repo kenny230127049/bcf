@@ -788,10 +788,6 @@ if (isset($_GET['logout'])) {
                                         <?php echo strtoupper(substr($currentUser['nama_lengkap'], 0, 1)); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-9">
-                                    <h4 class="text-white mb-2">Selamat datang, <?php echo htmlspecialchars($currentUser['nama_lengkap']); ?>!</h4>
-                                    <p class="text-white mb-0">Sekolah: <?php echo htmlspecialchars($currentUser['sekolah']); ?> | Kelas: <?php echo htmlspecialchars($currentUser['kelas']); ?></p>
-                                </div>
                             </div>
                         </div>
                         
