@@ -99,42 +99,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="card">
                 <div class="card-body">
-                            <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-                            <form method="post">
-                                <input type="hidden" name="webinar_id" value="<?= $webinar_id ?>">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Nama Lengkap</label>
-                                            <input type="text" name="nama" class="form-control" value="<?= htmlspecialchars($_POST['nama'] ?? $user['nama_lengkap']) ?>" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($_POST['email'] ?? $user['email']) ?>" required>
-                                        </div>
-                                    </div>
+                    <?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+                    <form method="post">
+                        <input type="hidden" name="webinar_id" value="<?= $webinar_id ?>">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" name="nama" class="form-control" value="<?= htmlspecialchars($_POST['nama'] ?? $user['nama_lengkap']) ?>" required>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Telepon</label>
-                                            <input type="text" name="telepon" class="form-control" value="<?= htmlspecialchars($_POST['telepon'] ?? ($user['telepon'] ?? '')) ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Institusi</label>
-                                            <input type="text" name="institusi" class="form-control" value="<?= htmlspecialchars($_POST['institusi'] ?? ($user['institusi'] ?? '')) ?>">
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($_POST['email'] ?? $user['email']) ?>" required>
                                 </div>
-                                <div class="d-flex justify-content-end">
-                                    <a href="index.php#webinar" class="btn btn-outline-secondary me-2">Batal</a>
-                                    <button type="submit" class="btn btn-primary">Lanjut ke Pembayaran</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telepon</label>
+                                    <input type="text" name="telepon" class="form-control" value="<?= htmlspecialchars($_POST['telepon'] ?? ($user['telepon'] ?? '')) ?>">
                                 </div>
-                            </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Institusi</label>
+                                    <input type="text" name="institusi" class="form-control" value="<?= htmlspecialchars($_POST['institusi'] ?? ($user['institusi'] ?? '')) ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="index.php#webinar" class="btn btn-outline-secondary me-2">Batal</a>
+                            <button type="submit" class="btn btn-primary">Lanjut ke Pembayaran</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
