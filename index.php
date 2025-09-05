@@ -1048,7 +1048,9 @@ if (isset($_GET['logout'])) {
                                 </a>
                             </div>
                         <?php else: ?>
-                            <?php foreach ($userPendaftaran as $pendaftaran): ?>
+                            <?php foreach ($userPendaftaran as $pendaftaran): 
+                                $pendaftar = $db->fetch("SELECT * FROM pendaftar WHERE id = ?", [$pendaftaran['pendaftar_id']]);
+                                ?>
                                 <div class="pendaftaran-card">
                                     <div class="row align-items-center">
                                         <div class="col-md-8">
@@ -1087,9 +1089,9 @@ if (isset($_GET['logout'])) {
                                             </div>
                                         </div>
                                         <div class="col-md-4 text-center">
-                                            <span class="status-badge status-<?php echo $pendaftaran['status']; ?>">
+                                            <span class="status-badge status-<?php echo $pendaftar['status']; ?>">
                                                 <?php 
-                                                switch($pendaftaran['status']) {
+                                                switch($pendaftar['status']) {
                                                     case 'pending': 
                                                         echo '<i class="fas fa-clock"></i> Menunggu Approval'; 
                                                         break;
@@ -1102,8 +1104,8 @@ if (isset($_GET['logout'])) {
                                                 }
                                                 ?>
                                             </span>
-                                            
-                                            <?php if ($pendaftaran['status'] === 'pending'): ?>
+
+                                            <?php if ($pendaftar['status'] === 'pending'): ?>
                                                 <div class="mt-3">
                                                     <small class="text-muted">
                                                         <i class="fas fa-info-circle"></i> 
