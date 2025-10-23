@@ -20,7 +20,12 @@ if ($id) {
     $webinar_reg = $db->fetch("SELECT * FROM b_webinar_pendaftar WHERE id = ?", [$id]);
     if ($webinar_reg) {
         $is_webinar = true;
-        $pendaftar = $webinar_reg;
+        $pendaftar = $db->fetch("
+            SELECT wp.*, w.judul as webinar_nama, w.biaya
+            FROM b_webinar_pendaftar wp 
+            JOIN b_webinar w ON wp.webinar_id = w.id 
+            WHERE wp.id = ?
+        ", [$id]);
     } else {
         // This is a competition registration
         $pendaftar = $db->fetch("

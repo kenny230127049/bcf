@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $kapasitas = intval($_POST['kapasitas'] ?? 0);
         $biaya = floatval($_POST['biaya'] ?? 0);
         $status = $_POST['status'] ?? 'aktif';
+        $link_grup_wa = $_POST['link_grup_wa'] ?? null;
 
         $data = [
             'judul' => $judul,
@@ -32,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'kapasitas' => $kapasitas,
             'biaya' => $biaya,
             'status' => $status,
+            'link_grup_wa' => $link_grup_wa,
         ];
 
         // Handle banner upload
@@ -406,6 +408,11 @@ $webinars = $db->fetchAll('SELECT * FROM b_webinar ORDER BY created_at DESC');
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">Link Grup WhatsApp</label>
+                            <input type="text" name="link_grup_wa" id="webinarLinkGrupWa" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Banner (JPG/PNG)</label>
                             <input type="file" name="banner" class="form-control" accept=".jpg,.jpeg,.png,.gif,.webp">
                             <small class="form-text text-muted">Format yang didukung: JPG, PNG, GIF, WebP</small>
@@ -435,6 +442,7 @@ $webinars = $db->fetchAll('SELECT * FROM b_webinar ORDER BY created_at DESC');
             document.getElementById('webinarKapasitas').value = webinar.kapasitas || 0;
             document.getElementById('webinarBiaya').value = webinar.biaya || 0;
             document.getElementById('webinarStatus').value = webinar.status || 'aktif';
+            document.getElementById('webinarLinkGrupWa').value = webinar.link_grup_wa || '';
             
             var modal = new bootstrap.Modal(document.getElementById('webinarModal'));
             modal.show();

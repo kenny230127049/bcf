@@ -1721,7 +1721,7 @@ if (isset($_GET['logout'])) {
         <!-- Webinar Saya Section -->
         <?php
         $currentUser = $auth->getCurrentUser();
-        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
+        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya, w.link_grup_wa FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
         ?>
         <section id="webinar-saya" class="py-5" style="background: #ffffff;">
             <div class="container">
@@ -1760,14 +1760,21 @@ if (isset($_GET['logout'])) {
                                                         <p>Rp <?php echo number_format((float)$wr['biaya'], 0, ',', '.'); ?></p>
                                                     </div>
                                                 </div>
-                                                <?php if (!empty($wr['metode_pembayaran'])): ?>
-                                                    <div class="row mt-2">
+                                                <div class="row mt-2">
+                                                    <?php if (!empty($wr['metode_pembayaran'])): ?>
                                                         <div class="col-md-6">
                                                             <h6><i class="fas fa-receipt"></i> Metode Pembayaran</h6>
                                                             <p><?php echo htmlspecialchars($wr['metode_pembayaran']); ?></p>
                                                         </div>
-                                                    </div>
-                                                <?php endif; ?>
+                                                    <?php endif; ?>
+
+                                                    <?php if ($wr['status'] == 'approved'): ?>
+                                                        <div class="col-md-6">
+                                                            <h6><i class="fas fa-link"></i> Link grup WhatsApp</h6>
+                                                            <a href="<?php echo htmlspecialchars($wr['link_grup_wa']); ?>"><?php echo htmlspecialchars($wr['link_grup_wa']); ?></a>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 text-center">
