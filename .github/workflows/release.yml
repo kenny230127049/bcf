@@ -4,7 +4,7 @@ on:
       - release
 
 jobs:
-  test-deployment:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,6 +22,7 @@ jobs:
           lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; \
                                              set ssl:verify_certificate false; \
                                              cd blucreativefest; \
+                                             mrm *.php admin/*.php config/*.php; \
                                              mput -e *.php; \
                                              mput -e admin/*.php -O admin/; \
                                              mput -e config/*.php -O config/; \
