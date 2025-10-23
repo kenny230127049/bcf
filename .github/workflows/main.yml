@@ -14,8 +14,8 @@ jobs:
       - name: install lftp
         run: sudo apt install lftp
       - name: test the lftp (please work)
-        run: lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; \
-                                               set ssl:verify_certificate false; \
-                                               cd blucreativefest-dev; \
-                                               mput -e *.php admin/*.php config/*.php; \
+        run: lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }} \
+                                               set ssl:verify_certificate false \
+                                               cd blucreativefest-dev \
+                                               mput -e *.php admin/*.php config/*.php \
                                                ls"
