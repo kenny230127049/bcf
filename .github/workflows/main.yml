@@ -14,4 +14,4 @@ jobs:
       - name: install lftp
         run: sudo apt install lftp
       - name: test the lftp (please work)
-        run: lftp <<< "exit"
+        run: lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; set ssl:verify_certificate false; ls"
