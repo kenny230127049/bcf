@@ -4,7 +4,7 @@ on:
       - release
 
 jobs:
-  test-deployment:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
