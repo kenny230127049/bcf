@@ -9,8 +9,10 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: repo
+        working-directory: ./
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v5
       - name: install lftp
         run: sudo apt install lftp
       - name: check current directory
