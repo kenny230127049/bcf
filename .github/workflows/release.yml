@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - release
 
 jobs:
   test-deployment:
@@ -21,6 +21,6 @@ jobs:
         run: > 
           lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; \
                                              set ssl:verify_certificate false; \
-                                             cd blucreativefest-dev; \
+                                             cd blucreativefest; \
                                              mput -c *.php admin/*.php config/*.php; \
                                              ls"
