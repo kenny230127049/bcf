@@ -33,7 +33,7 @@ if (isset($_GET['logout'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bluvocation Creative Fest - Lomba Kreatif untuk SD/SMP/SMA/Sederajat :3</title>
+    <title>Bluvocation Creative Fest - Lomba Kreatif untuk SD/SMP/SMA/Sederajat</title>
     <link rel="icon" type="image/png" href="favicon/bcf.png" sizes="32x32">
     <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
