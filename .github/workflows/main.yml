@@ -22,5 +22,5 @@ jobs:
           lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; \
                                              set ssl:verify_certificate false; \
                                              cd blucreativefest-dev; \
-                                             mput -c *.php admin/*.php config/*.php; \
+                                             mput -e *.php admin/*.php config/*.php; \
                                              ls"
