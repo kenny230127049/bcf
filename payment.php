@@ -77,7 +77,7 @@
                 $result = $db->insert('b_pembayaran', $payment_data);
 
                 if ($result) {
-                    header("Location: success.php?id=$pendaftar_id");
+                    header("Location: sukses.php?id=$pendaftar_id");
                     exit;
                 } else {
                     $message = 'Gagal memproses pembayaran. Silakan coba lagi!';

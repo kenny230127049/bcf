@@ -283,6 +283,26 @@
             }
 
             .btn-back {
+                border: 1px solid var(--border-color);
+                background: var(--border-color);
+                color: var(--dark-text);
+                padding: 0.75rem 1.5rem;
+                border-radius: 50px;
+                font-weight: 600;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                color: var(--dark-text);
+            }
+
+            .btn-continue {
                 background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
                 border: none;
                 color: white;
@@ -296,7 +316,7 @@
                 transition: all 0.3s ease;
             }
 
-            .btn-back:hover {
+            .btn-continue:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
                 color: white;
@@ -530,11 +550,18 @@
 
 
                     <!-- Tombol Kembali -->
-                    <div class="text-center mt-4">
+                    <div class="d-flex justify-content-between mt-4">
                         <a href="index.php" class="btn-back">
                             <i class="fas fa-arrow-left"></i>
                             Kembali ke Beranda
                         </a>
+
+                        <?php if ($pendaftaran['status_pembayaran'] == null): ?>
+                            <a href="payment.php?pendaftar_id=<?= $pendaftaran['id'] ?>" class="btn-continue">
+                                <i class="fas fa-arrow-right"></i>
+                                Lanjut Proses Pendaftaran
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
