@@ -2,12 +2,21 @@
 // Konfigurasi Database
 class Database {
     private $host = 'localhost';
-    private $username = 'u993542331_adxuser';
-    private $password = 'BMXRider123';
-    private $database = 'u993542331_digital';
+    private $username;
+    private $password;
+    private $database;
     private $connection;
 
     public function __construct() {
+        $env = parse_ini_file(__DIR__ . "/../.env");
+        foreach ($env as $key => $e) {
+            $_ENV[$key] = $e;
+        }
+
+        $this->username = $_ENV["db.username"];
+        $this->password = $_ENV["db.password"];
+        $this->database = $_ENV["db.database"];
+
         try {
             $this->connection = new PDO(
                 "mysql:host={$this->host};dbname={$this->database};cha
