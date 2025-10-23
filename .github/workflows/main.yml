@@ -11,5 +11,7 @@ jobs:
         shell: bash
         working-directory: ./
     steps:
-       - name: test the lftp (please work)
-         run: lftp <<< "exit"
+      - name: install lftp
+        run: sudo apt install lftp
+      - name: test the lftp (please work)
+        run: lftp <<< "exit"
