@@ -14,7 +14,7 @@ jobs:
       - name: install lftp
         run: sudo apt install lftp
       - name: check current directory
-        run: pwd; ls
+        run: ls
       - name: test the lftp (please work)
         run: > 
           lftp ${{ secrets.FTP_HOST }} <<< "user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; \
