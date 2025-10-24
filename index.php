@@ -1355,7 +1355,7 @@ if (isset($_GET['logout'])) {
                 <div class="col-12 col-md-6 order-2 order-md-1">
                     <div class="text-center text-md-start">
                         <p>Kreativitas adalah kemampuan melahirkan gagasan, ide, atau produk baru yang berbeda dari sebelumnya. Melalui kreativitas, kita bisa menciptakan inovasi yang relevan dengan perkembangan zaman.</p>
-                        <p>Di SMK Budi Luhur, program <strong>projek kreatif kewirausahaan</strong> mendorong siswa untuk merencanakan, memproduksi, dan memasarkan karya mereka�melatih keterampilan teknis, manajerial, serta kerja tim.</p>
+                        <p>Di SMK Budi Luhur, program <strong>projek kreatif kewirausahaan</strong> mendorong siswa untuk merencanakan, memproduksi, dan memasarkan karya mereka melatih keterampilan teknis, manajerial, serta kerja tim.</p>
 
                         <div class="row g-3 my-3 feature-list">
                             <div class="col-12 col-sm-6">
