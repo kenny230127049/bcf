@@ -1794,17 +1794,9 @@ if (isset($_GET['logout'])) {
                                                 ?>
                                             </span>
                                             <div class="mt-3 d-grid gap-2">
-                                                <?php if ($wr['status'] !== 'rejected'): ?>
-                                                    <?php if (empty($wr['bukti_transfer'])): ?>
-                                                        <a href="webinar_payment.php?id=<?php echo urlencode($wr['id']); ?>" class="btn btn-primary">
-                                                            <i class="fas fa-arrow-right"></i> Lanjut Pembayaran
-                                                        </a>
-                                                    <?php else: ?>
-                                                        <a href="<?php echo htmlspecialchars($wr['bukti_transfer']); ?>" target="_blank" class="btn btn-outline-secondary">
-                                                            <i class="fas fa-file-image"></i> Lihat Bukti
-                                                        </a>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
+                                                <a href="detail_webinar_saya.php?id=<?php echo urlencode($wr['id']) ?>" class="btn btn-primary">
+                                                    <i class="fas fa-eye me-1"></i> Detail Webinar Saya
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
