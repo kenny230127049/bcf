@@ -14,7 +14,7 @@ if (!$auth->isLoggedIn()) {
 $db = getDB();
 $user = $auth->getCurrentUser();
 $webinar_id = intval($_GET['webinar_id'] ?? $_POST['webinar_id'] ?? 0);
-$ws = $db->fetch('SELECT * FROM b_webinar WHERE id = ? AND status = "aktif"', [$webinar_id]);
+$ws = $db->fetch('SELECT * FROM {prefix}webinar WHERE id = ? AND status = "aktif"', [$webinar_id]);
 if (!$ws) {
     header('Location: index.php#webinar');
     exit;
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Nama dan email wajib diisi';
     } else {
         // Prevent duplicate
-        $existing = $db->fetch('SELECT id FROM b_webinar_pendaftar WHERE user_id = ? AND webinar_id = ?', [$user['id'], $webinar_id]);
+        $existing = $db->fetch('SELECT id FROM {prefix}webinar_pendaftar WHERE user_id = ? AND webinar_id = ?', [$user['id'], $webinar_id]);
         if ($existing) {
             // Sudah pernah mendaftar: arahkan langsung ke pembayaran webinar
             header('Location: webinar_payment.php?id=' . urlencode($existing['id']));
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Langsung simpan ke database
         try {
             $db->getConnection()->beginTransaction();
-            $db->insert('b_webinar_pendaftar', $data);
+            $db->insert('{prefix}webinar_pendaftar', $data);
             $db->getConnection()->commit();
 
             header('Location: webinar_payment.php?id=' . urlencode($reg_id));

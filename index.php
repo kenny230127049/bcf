@@ -9,10 +9,10 @@ $auth = new Auth();
 $db = getDB();
 
 // Ambil data kategori lomba
-$kategori_lomba = $db->fetchAll("SELECT * FROM b_kategori_lomba WHERE status = 'aktif' ORDER BY nama");
+$kategori_lomba = $db->fetchAll("SELECT * FROM {prefix}kategori_lomba WHERE status = 'aktif' ORDER BY nama");
 
 // Ambil data webinar aktif
-$webinars = $db->fetchAll("SELECT * FROM b_webinar WHERE status = 'aktif' ORDER BY tanggal, judul");
+$webinars = $db->fetchAll("SELECT * FROM {prefix}webinar WHERE status = 'aktif' ORDER BY tanggal, judul");
 
 // Jika user sudah login, ambil data user
 if ($auth->isLoggedIn()) {
@@ -1481,7 +1481,7 @@ if (isset($_GET['logout'])) {
                 <?php foreach ($webinars as $ws): ?>
                     <?php
                     $kapasitas = (int)($ws['kapasitas'] ?? 0);
-                    $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM b_webinar_pendaftar WHERE webinar_id = ?', [$ws['id']]);
+                    $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM {prefix}webinar_pendaftar WHERE webinar_id = ?', [$ws['id']]);
                     $terdaftar = (int)($countRow['cnt'] ?? 0);
                     $sisa = max(0, $kapasitas - $terdaftar);
                     $isFull = $kapasitas > 0 ? ($sisa <= 0) : false;
@@ -1721,7 +1721,7 @@ if (isset($_GET['logout'])) {
         <!-- Webinar Saya Section -->
         <?php
         $currentUser = $auth->getCurrentUser();
-        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya, w.link_grup_wa FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
+        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya, w.link_grup_wa FROM {prefix}webinar_pendaftar wp JOIN {prefix}webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
         ?>
         <section id="webinar-saya" class="py-5" style="background: #ffffff;">
             <div class="container">
@@ -1859,7 +1859,7 @@ if (isset($_GET['logout'])) {
                                 dalam berbagai bidang teknologi dan desain.
                             </p>
                             <div class="social-links">
-                                <a href="https://www.instagram.com/bluvocationfest?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                                <a href="https://www.instagram.com/bluvocationfest?utm_source=ig_we{prefix}button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                                     target="_blank"
                                     class="social-link"
                                     aria-label="Instagram">

@@ -15,8 +15,8 @@
     // Get pendaftar details from database
     $pendaftar = $db->fetch(
         "SELECT p.*, kl.nama as kategori_nama, kl.biaya, kl.jenis_lomba, kl.max_peserta
-        FROM b_pendaftar p 
-        JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+        FROM {prefix}pendaftar p 
+        JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
         WHERE p.id = ?",
         [$pendaftar_id]
     );
@@ -74,7 +74,7 @@
                     'bukti_transfer' => $uploadedFilename,
                 ];
 
-                $result = $db->insert('b_pembayaran', $payment_data);
+                $result = $db->insert('{prefix}pembayaran', $payment_data);
 
                 if ($result) {
                     header("Location: sukses.php?id=$pendaftar_id");

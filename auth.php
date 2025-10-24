@@ -16,7 +16,7 @@ class Auth {
         try {
             // Cek apakah username atau email sudah ada
             $existingUser = $this->db->fetch(
-                "SELECT id FROM b_users WHERE username = ? OR email = ?", 
+                "SELECT id FROM {prefix}users WHERE username = ? OR email = ?", 
                 [$data['username'], $data['email']]
             );
             
@@ -36,7 +36,7 @@ class Auth {
                 'telepon' => $data['telepon']
             ];
             
-            $userId = $this->db->insert('b_users', $userData);
+            $userId = $this->db->insert('{prefix}users', $userData);
             
             if ($userId) {
                 return ['success' => true, 'message' => 'Registrasi berhasil', 'user_id' => $userId];
@@ -52,7 +52,7 @@ class Auth {
     public function update_account($data) {
         try {
             $currentUserData = $this->db->fetch(
-                "SELECT * FROM b_users WHERE id = ?", 
+                "SELECT * FROM {prefix}users WHERE id = ?", 
                 [$data['id']]
             );
             
@@ -69,7 +69,7 @@ class Auth {
             ];
 
             $existingUser = $this->db->fetch(
-                "SELECT id FROM b_users WHERE username = ?", 
+                "SELECT id FROM {prefix}users WHERE username = ?", 
                 [$userData['username']]
             );
             
@@ -77,7 +77,7 @@ class Auth {
                 return ['success' => false, 'message' => 'Username sudah terdaftar'];
             }
             
-            $userId = $this->db->update('b_users', $userData, "id = ?", [$currentUserData["id"]]);
+            $userId = $this->db->update('{prefix}users', $userData, "id = ?", [$currentUserData["id"]]);
             
             if ($userId) {
                 return ['success' => true, 'message' => 'Update berhasil', 'user_id' => $userId];
@@ -95,7 +95,7 @@ class Auth {
         try {
             // Cari user berdasarkan username atau email
             $user = $this->db->fetch(
-                "SELECT * FROM b_users WHERE (username = ? OR email = ?) AND is_active = 1", 
+                "SELECT * FROM {prefix}users WHERE (username = ? OR email = ?) AND is_active = 1", 
                 [$username, $username]
             );
             
@@ -140,7 +140,7 @@ class Auth {
             return null;
         }
         
-        return $this->db->fetch("SELECT * FROM b_users WHERE id = ?", [$_SESSION['user_id']]);
+        return $this->db->fetch("SELECT * FROM {prefix}users WHERE id = ?", [$_SESSION['user_id']]);
     }
     
     // Dapatkan pendaftaran user
@@ -155,9 +155,9 @@ class Auth {
         
         return $this->db->fetchAll(
             "SELECT up.*, p.status, p.catatan_admin, kl.nama as nama_lomba, kl.deskripsi, kl.link_grup_wa
-             FROM b_user_pendaftaran up 
-             JOIN b_pendaftar p ON up.pendaftar_id = p.id
-             JOIN b_kategori_lomba kl ON up.kategori_lomba_id = kl.id 
+             FROM {prefix}user_pendaftaran up 
+             JOIN {prefix}pendaftar p ON up.pendaftar_id = p.id
+             JOIN {prefix}kategori_lomba kl ON up.kategori_lomba_id = kl.id 
              WHERE up.user_id = ? 
              ORDER BY up.tanggal_daftar DESC",
             [$userId]
@@ -174,7 +174,7 @@ class Auth {
             
             // Cek apakah sudah mendaftar di kategori ini
             $existing = $this->db->fetch(
-                "SELECT id FROM b_user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
+                "SELECT id FROM {prefix}user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
                 [$userId, $kategoriLombaId]
             );
             
@@ -189,7 +189,7 @@ class Auth {
                 'status' => 'pending'
             ];
             
-            $result = $this->db->insert('b_user_pendaftaran', $data);
+            $result = $this->db->insert('{prefix}user_pendaftaran', $data);
             
             if ($result) {
                 return ['success' => true, 'message' => 'Pendaftaran berhasil ditambahkan'];

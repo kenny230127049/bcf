@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     'link_grup_wa' => $link_grup_wa,
                     'periode_pendaftaran' => $periode_pendaftaran,
                 ];
-                $result = $db->insert('b_kategori_lomba', $data);
+                $result = $db->insert('{prefix}kategori_lomba', $data);
                 
                 if ($result) {
                     $message = 'Kategori lomba berhasil ditambahkan!';
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     'link_grup_wa' => $link_grup_wa,
                     'periode_pendaftaran' => $periode_pendaftaran,
                 ];
-                $result = $db->update('b_kategori_lomba', $data, 'id = ?', [$id]);
+                $result = $db->update('{prefix}kategori_lomba', $data, 'id = ?', [$id]);
                 
                 if ($result) {
                     $message = 'Kategori lomba berhasil diperbarui!';
@@ -118,13 +118,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Get all categories
-$kategori_lomba = $db->fetchAll("SELECT * FROM b_kategori_lomba ORDER BY created_at DESC");
+$kategori_lomba = $db->fetchAll("SELECT * FROM {prefix}kategori_lomba ORDER BY created_at DESC");
 
 // Get category for editing
 $edit_kategori = null;
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
-    $edit_kategori = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ?", [$edit_id]);
+    $edit_kategori = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ?", [$edit_id]);
 }
 ?>
 

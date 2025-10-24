@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Cari admin berdasarkan username
         $admin = $db->fetch(
-            "SELECT * FROM b_admin WHERE username = ? AND is_active = 1", 
+            "SELECT * FROM {prefix}admin WHERE username = ? AND is_active = 1", 
             [$username]
         );
         

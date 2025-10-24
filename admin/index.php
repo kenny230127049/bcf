@@ -12,22 +12,22 @@ if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
 $db = getDB();
 
 // Get statistics
-$total_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar")['total'];
-$pending_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar WHERE status = 'pending'")['total'];
-$confirmed_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar WHERE status = 'confirmed'")['total'];
-$total_kategori = $db->fetch("SELECT COUNT(*) as total FROM b_kategori_lomba")['total'];
+$total_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar")['total'];
+$pending_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar WHERE status = 'pending'")['total'];
+$confirmed_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar WHERE status = 'confirmed'")['total'];
+$total_kategori = $db->fetch("SELECT COUNT(*) as total FROM {prefix}kategori_lomba")['total'];
 
 // Get recent registrations
 $recent_pendaftar = $db->fetchAll("
     SELECT p.*, kl.nama as kategori_nama 
-    FROM b_pendaftar p 
-    JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+    FROM {prefix}pendaftar p 
+    JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
     ORDER BY p.created_at DESC 
     LIMIT 10
 ");
 
 // Get competition categories
-$kategori_lomba = $db->fetchAll("SELECT * FROM b_kategori_lomba ORDER BY created_at DESC");
+$kategori_lomba = $db->fetchAll("SELECT * FROM {prefix}kategori_lomba ORDER BY created_at DESC");
 ?>
 
 <!DOCTYPE html>

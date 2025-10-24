@@ -39,6 +39,9 @@ class Database {
     }
 
     public function query($sql, $params = []) {
+        // format prefix untuk nama table
+        $sql = str_replace("{prefix}", $_ENV["db.table_prefix"], $sql);
+
         try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($params);

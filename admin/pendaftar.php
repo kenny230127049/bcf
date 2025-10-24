@@ -11,11 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     $pendaftar_id = $_POST['pendaftar_id'] ?? '';
 
     if ($action == 'verify' && !empty($pendaftar_id)) {
-        $result = $db->update('b_pendaftar', ['status' => 'confirmed'], 'id = ?', [$pendaftar_id]);
+        $result = $db->update('{prefix}pendaftar', ['status' => 'confirmed'], 'id = ?', [$pendaftar_id]);
 
         // Sinkronkan status ke tabel user_pendaftaran
         $db->update(
-            'b_user_pendaftaran',
+            '{prefix}user_pendaftaran',
             ['status' => 'approved', 'tanggal_approval' => date('Y-m-d H:i:s')],
             'pendaftar_id = ?',
             [$pendaftar_id]
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
 
         // Otomatis setujui pembayaran jika ada
         $db->update(
-            'b_pembayaran',
+            '{prefix}pembayaran',
             ['status' => 'success', 'tanggal_pembayaran' => date('Y-m-d H:i:s')],
             'pendaftar_id = ? AND status = ?',
             [$pendaftar_id, 'pending']
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             $message_type = 'danger';
         }
     } elseif ($action == 'reject' && !empty($pendaftar_id)) {
-        $result = $db->update('b_pendaftar', ['status' => 'rejected'], 'id = ?', [$pendaftar_id]);
+        $result = $db->update('{prefix}pendaftar', ['status' => 'rejected'], 'id = ?', [$pendaftar_id]);
 
         if ($result) {
             $message = 'Pendaftaran ditolak!';
@@ -82,10 +82,10 @@ $query = "
     SELECT p.*, kl.nama as kategori_nama, kl.jenis_lomba, kl.max_peserta,
            pay.bukti_transfer, pay.status as status_pembayaran, pay.metode_pembayaran,
            up.nama_kelompok
-    FROM b_pendaftar p 
-    JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
-    LEFT JOIN b_pembayaran pay ON p.id = pay.pendaftar_id
-    LEFT JOIN b_user_pendaftaran up ON up.pendaftar_id = p.id
+    FROM {prefix}pendaftar p 
+    JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+    LEFT JOIN {prefix}pembayaran pay ON p.id = pay.pendaftar_id
+    LEFT JOIN {prefix}user_pendaftaran up ON up.pendaftar_id = p.id
     $where_clause
     ORDER BY p.created_at DESC
 ";
@@ -93,13 +93,13 @@ $query = "
 $pendaftar_list = $db->fetchAll($query, $params);
 
 // Get categories for filter
-$kategori_list = $db->fetchAll("SELECT id, nama FROM b_kategori_lomba ORDER BY nama");
+$kategori_list = $db->fetchAll("SELECT id, nama FROM {prefix}kategori_lomba ORDER BY nama");
 
 // Get statistics
-$total_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar")['total'];
-$pending_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar WHERE status = 'pending'")['total'];
-$confirmed_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar WHERE status = 'confirmed'")['total'];
-$rejected_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM b_pendaftar WHERE status = 'rejected'")['total'];
+$total_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar")['total'];
+$pending_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar WHERE status = 'pending'")['total'];
+$confirmed_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar WHERE status = 'confirmed'")['total'];
+$rejected_pendaftar = $db->fetch("SELECT COUNT(*) as total FROM {prefix}pendaftar WHERE status = 'rejected'")['total'];
 ?>
 
 <!DOCTYPE html>

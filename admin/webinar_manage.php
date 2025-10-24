@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($action === 'create') {
-            $res = $db->insert('b_webinar', $data);
+            $res = $db->insert('{prefix}webinar', $data);
             if ($res) { 
                 $message = 'Webinar berhasil ditambahkan'; 
                 $message_type = 'success'; 
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message_type = 'danger'; 
             }
         } else {
-            $res = $db->update('b_webinar', $data, 'id = ?', [$id]);
+            $res = $db->update('{prefix}webinar', $data, 'id = ?', [$id]);
             if ($res !== false) { 
                 $message = 'Webinar berhasil diperbarui'; 
                 $message_type = 'success'; 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($action === 'delete') {
         $id = intval($_POST['id'] ?? 0);
-        $deleted = $db->delete('b_webinar', 'id = ?', [$id]);
+        $deleted = $db->delete('{prefix}webinar', 'id = ?', [$id]);
         if ($deleted) { 
             $message = 'Webinar dihapus'; 
             $message_type = 'success'; 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch webinar list
-$webinars = $db->fetchAll('SELECT * FROM b_webinar ORDER BY created_at DESC');
+$webinars = $db->fetchAll('SELECT * FROM {prefix}webinar ORDER BY created_at DESC');
 ?>
 <!DOCTYPE html>
 <html lang="id">

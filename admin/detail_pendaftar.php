@@ -14,15 +14,15 @@ $pendaftar_id = $_GET['id'];
 $pendaftar = $db->fetch("
     SELECT p.*, kl.nama as kategori_nama, kl.jenis_lomba, kl.max_peserta, kl.biaya,
            up.nama_kelompok
-    FROM b_pendaftar p 
-    JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
-    LEFT JOIN b_user_pendaftaran up ON up.pendaftar_id = p.id
+    FROM {prefix}pendaftar p 
+    JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+    LEFT JOIN {prefix}user_pendaftaran up ON up.pendaftar_id = p.id
     WHERE p.id = ?
 ", [$pendaftar_id]);
 
 // Get payment details
 $pembayaran = $db->fetch("
-    SELECT * FROM b_pembayaran 
+    SELECT * FROM {prefix}pembayaran 
     WHERE pendaftar_id = ?
 ", [$pendaftar_id]);
 
@@ -35,8 +35,8 @@ if (!$pendaftar) {
 $anggota_kelompok = [];
 if ($pendaftar['jenis_lomba'] == 'kelompok') {
     // Resolve anggota_kelompok table name across environments
-    $tableCheck = $db->fetch("SHOW TABLES LIKE 'b_anggota_kelompok'");
-    $anggotaTable = $tableCheck ? 'b_anggota_kelompok' : 'anggota_kelompok';
+    $tableCheck = $db->fetch("SHOW TABLES LIKE '{prefix}anggota_kelompok'");
+    $anggotaTable = $tableCheck ? '{prefix}anggota_kelompok' : 'anggota_kelompok';
     $anggota_kelompok = $db->fetchAll("SELECT * FROM `$anggotaTable` WHERE pendaftar_id = ?", [$pendaftar_id]);
 }
 
@@ -47,14 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
 
     if ($action == 'verify') {
         $result = $db->update(
-            'b_pendaftar',
+            '{prefix}pendaftar',
             ['status' => 'confirmed', 'catatan_admin' => $catatan],
             'id = ?',
             [$pendaftar_id]
         );
         // Sinkronkan status ke tabel user_pendaftaran
         $db->update(
-            'b_user_pendaftaran',
+            '{prefix}user_pendaftaran',
             ['status' => 'approved', 'tanggal_approval' => date('Y-m-d H:i:s')],
             'pendaftar_id = ?',
             [$pendaftar_id]
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
 
         // Otomatis setujui pembayaran jika ada
         $db->update(
-            'b_pembayaran',
+            '{prefix}pembayaran',
             ['status' => 'success', 'tanggal_pembayaran' => date('Y-m-d H:i:s')],
             'pendaftar_id = ? AND status = ?',
             [$pendaftar_id, 'pending']
@@ -74,14 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         }
     } elseif ($action == 'reject') {
         $result = $db->update(
-            'b_pendaftar',
+            '{prefix}pendaftar',
             ['status' => 'rejected', 'catatan_admin' => $catatan],
             'id = ?',
             [$pendaftar_id]
         );
         // Sinkronkan status ke tabel user_pendaftaran
         $db->update(
-            'b_user_pendaftaran',
+            '{prefix}user_pendaftaran',
             ['status' => 'rejected', 'tanggal_approval' => date('Y-m-d H:i:s')],
             'pendaftar_id = ?',
             [$pendaftar_id]
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     } elseif ($action == 'approve_payment') {
         // Update status pembayaran menjadi success
         $result = $db->update(
-            'b_pembayaran',
+            '{prefix}pembayaran',
             ['status' => 'success', 'tanggal_pembayaran' => date('Y-m-d H:i:s')],
             'pendaftar_id = ?',
             [$pendaftar_id]
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     } elseif ($action == 'reject_payment') {
         // Update status pembayaran menjadi failed
         $result = $db->update(
-            'b_pembayaran',
+            '{prefix}pembayaran',
             ['status' => 'failed'],
             'pendaftar_id = ?',
             [$pendaftar_id]

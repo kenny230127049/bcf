@@ -23,7 +23,7 @@ if (!$kategori_id) {
 }
 
 // Get kategori details
-$kategori = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ? AND status = 'aktif'", [$kategori_id]);
+$kategori = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ? AND status = 'aktif'", [$kategori_id]);
 if (!$kategori) {
     header('Location: index.php');
     exit;
@@ -35,7 +35,7 @@ $max_peserta = $kategori['max_peserta'] ?? 1;
 
 // Cek apakah user sudah mendaftar di lomba ini
 $existingPendaftaran = $db->fetch(
-    "SELECT id FROM b_user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
+    "SELECT id FROM {prefix}user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
     [$currentUser['id'], $kategori_id]
 );
 
@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'ig_smkblverse_proof' => $ig_smkblverse_proof
         ];
 
-        // Jika skema b_pendaftar memiliki kolom nama_kelompok (NOT NULL), isi dengan nilai yang sesuai
+        // Jika skema {prefix}pendaftar memiliki kolom nama_kelompok (NOT NULL), isi dengan nilai yang sesuai
         if ($jenis_lomba == 'kelompok') {
             $data['nama_kelompok'] = $nama_kelompok;
         } else {
@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $namaKelompokToCheck = $data['nama_kelompok'] ?? '';
             if ($namaKelompokToCheck !== '') {
                 $existingTeam = $db->fetch(
-                    "SELECT id FROM b_user_pendaftaran WHERE LOWER(nama_kelompok) = LOWER(?) LIMIT 1",
+                    "SELECT id FROM {prefix}user_pendaftaran WHERE LOWER(nama_kelompok) = LOWER(?) LIMIT 1",
                     [$namaKelompokToCheck]
                 );
                 if ($existingTeam) {
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'nama_kelompok' => $defaultNamaKelompok
             ];
 
-            $upKelasColumnInfo = $db->fetch("SHOW COLUMNS FROM b_user_pendaftaran LIKE 'kelas'");
+            $upKelasColumnInfo = $db->fetch("SHOW COLUMNS FROM {prefix}user_pendaftaran LIKE 'kelas'");
             if ($upKelasColumnInfo) {
                 $userPendaftaranData['kelas'] = $kelasForInsert;
             }
@@ -281,15 +281,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $db->getConnection()->beginTransaction();
 
                 // 1) Insert pendaftar utama
-                $db->insert('b_pendaftar', $data);
+                $db->insert('{prefix}pendaftar', $data);
 
                 // 2) Insert user_pendaftaran data
-                $db->insert('b_user_pendaftaran', $userPendaftaranData);
+                $db->insert('{prefix}user_pendaftaran', $userPendaftaranData);
 
                 // 3) Insert anggota jika ada
                 if (!empty($anggota_list)) {
                     foreach ($anggota_list as $anggota) {
-                        $db->insert('b_anggota_kelompok', $anggota);
+                        $db->insert('{prefix}anggota_kelompok', $anggota);
                     }
                 }
 

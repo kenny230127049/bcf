@@ -28,10 +28,10 @@
             up.tanggal_daftar,
             up.tanggal_approval,
             up.catatan_admin
-        FROM b_user_pendaftaran up
-        JOIN b_pendaftar p ON up.pendaftar_id = p.id
-        JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id
-        LEFT JOIN b_pembayaran pb ON p.id = pb.pendaftar_id
+        FROM {prefix}user_pendaftaran up
+        JOIN {prefix}pendaftar p ON up.pendaftar_id = p.id
+        JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id
+        LEFT JOIN {prefix}pembayaran pb ON p.id = pb.pendaftar_id
         WHERE up.user_id = ?
         ORDER BY up.tanggal_daftar DESC
     ", [$user_id]);
@@ -45,7 +45,7 @@
     $anggota_tim = [];
     if ($pendaftaran['tipe_lomba'] == 'kelompok') {
         $anggota_tim = $db->fetchAll("
-            SELECT * FROM b_anggota_kelompok 
+            SELECT * FROM {prefix}anggota_kelompok 
             WHERE pendaftar_id = ? 
             ORDER BY id
         ", [$pendaftaran['id']]);
@@ -59,7 +59,7 @@
 
     // Ambil data timeline lomba
     $timeline = $db->fetchAll("
-        SELECT * FROM b_timeline_lomba 
+        SELECT * FROM {prefix}timeline_lomba 
         WHERE kategori_lomba_id = ? 
         ORDER BY tanggal_mulai
     ", [$pendaftaran['kategori_lomba_id']]);

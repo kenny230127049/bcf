@@ -17,7 +17,7 @@ if (!$webinar_id) {
 }
 
 // Ambil detail lomba
-$webinar = $db->fetch("SELECT * FROM b_webinar WHERE id = ?", [$webinar_id]);
+$webinar = $db->fetch("SELECT * FROM {prefix}webinar WHERE id = ?", [$webinar_id]);
 if (!$webinar) {
     header('Location: index.php');
     exit;
@@ -30,7 +30,7 @@ if ($auth->isLoggedIn()) {
 
     // Cek apakah user sudah mendaftar di lomba ini
     $sudahDaftar = $db->fetch(
-        "SELECT * FROM b_webinar_pendaftar WHERE user_id = ? AND webinar_id = ?",
+        "SELECT * FROM {prefix}webinar_pendaftar WHERE user_id = ? AND webinar_id = ?",
         [$currentUser['id'], $webinar_id]
     );
 }
