@@ -17,7 +17,7 @@ if (!$lomba_id) {
 }
 
 // Ambil detail lomba
-$lomba = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ? AND status = 'aktif'", [$lomba_id]);
+$lomba = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ? AND status = 'aktif'", [$lomba_id]);
 
 if (!$lomba) {
     header('Location: index.php');
@@ -26,7 +26,7 @@ if (!$lomba) {
 
 // Ambil timeline lomba
 $timelines = $db->fetchAll(
-    "SELECT * FROM b_timeline_lomba 
+    "SELECT * FROM {prefix}timeline_lomba 
      WHERE kategori_lomba_id = ? 
      ORDER BY 
        CASE 
@@ -50,7 +50,7 @@ if ($auth->isLoggedIn()) {
 
     // Cek apakah user sudah mendaftar di lomba ini
     $sudahDaftar = $db->fetch(
-        "SELECT * FROM b_user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
+        "SELECT * FROM {prefix}user_pendaftaran WHERE user_id = ? AND kategori_lomba_id = ?",
         [$currentUser['id'], $lomba_id]
     );
 }

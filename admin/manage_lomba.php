@@ -31,41 +31,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Update data lomba (kolom yang pasti ada)
         $db->query(
-            "UPDATE b_kategori_lomba SET nama = ?, deskripsi = ?, periode_pendaftaran = ?, peserta = ?, tempat = ?, status = ?, allow_sd = ?, allow_smp = ?, allow_sma = ?, require_ig_proof = ? WHERE id = ?",
+            "UPDATE {prefix}kategori_lomba SET nama = ?, deskripsi = ?, periode_pendaftaran = ?, peserta = ?, tempat = ?, status = ?, allow_sd = ?, allow_smp = ?, allow_sma = ?, require_ig_proof = ? WHERE id = ?",
             [$nama, $deskripsi, $periode_pendaftaran, $peserta, $tempat, $status, $allow_sd, $allow_smp, $allow_sma, $require_ig_proof, $lomba_id]
         );
 
         // Pastikan kolom-kolom opsional tersedia; buat jika belum ada
-        $colJenis = $db->fetch("SHOW COLUMNS FROM b_kategori_lomba LIKE 'jenis_lomba'");
+        $colJenis = $db->fetch("SHOW COLUMNS FROM {prefix}kategori_lomba LIKE 'jenis_lomba'");
         if (!$colJenis) {
             try {
-                $db->query("ALTER TABLE b_kategori_lomba ADD COLUMN jenis_lomba ENUM('individu','kelompok') NOT NULL DEFAULT 'individu'");
+                $db->query("ALTER TABLE {prefix}kategori_lomba ADD COLUMN jenis_lomba ENUM('individu','kelompok') NOT NULL DEFAULT 'individu'");
             } catch (Exception $e) {
             }
         }
-        $colMax = $db->fetch("SHOW COLUMNS FROM b_kategori_lomba LIKE 'max_peserta'");
+        $colMax = $db->fetch("SHOW COLUMNS FROM {prefix}kategori_lomba LIKE 'max_peserta'");
         if (!$colMax) {
             try {
-                $db->query("ALTER TABLE b_kategori_lomba ADD COLUMN max_peserta INT NOT NULL DEFAULT 1");
+                $db->query("ALTER TABLE {prefix}kategori_lomba ADD COLUMN max_peserta INT NOT NULL DEFAULT 1");
             } catch (Exception $e) {
             }
         }
-        $colVar = $db->fetch("SHOW COLUMNS FROM b_kategori_lomba LIKE 'allow_variable_team_size'");
+        $colVar = $db->fetch("SHOW COLUMNS FROM {prefix}kategori_lomba LIKE 'allow_variable_team_size'");
         if (!$colVar) {
             try {
-                $db->query("ALTER TABLE b_kategori_lomba ADD COLUMN allow_variable_team_size TINYINT(1) NOT NULL DEFAULT 0");
+                $db->query("ALTER TABLE {prefix}kategori_lomba ADD COLUMN allow_variable_team_size TINYINT(1) NOT NULL DEFAULT 0");
             } catch (Exception $e) {
             }
         }
 
         // Update nilai kolom-kolom opsional
         if (!empty($jenis_lomba)) {
-            $db->query("UPDATE b_kategori_lomba SET jenis_lomba = ? WHERE id = ?", [$jenis_lomba, $lomba_id]);
+            $db->query("UPDATE {prefix}kategori_lomba SET jenis_lomba = ? WHERE id = ?", [$jenis_lomba, $lomba_id]);
         }
         if ($max_peserta !== null && $max_peserta > 0) {
-            $db->query("UPDATE b_kategori_lomba SET max_peserta = ? WHERE id = ?", [$max_peserta, $lomba_id]);
+            $db->query("UPDATE {prefix}kategori_lomba SET max_peserta = ? WHERE id = ?", [$max_peserta, $lomba_id]);
         }
-        $db->query("UPDATE b_kategori_lomba SET allow_variable_team_size = ? WHERE id = ?", [$allow_variable_team_size, $lomba_id]);
+        $db->query("UPDATE {prefix}kategori_lomba SET allow_variable_team_size = ? WHERE id = ?", [$allow_variable_team_size, $lomba_id]);
 
         // Handle PDF upload
         if (isset($_FILES['rulebook_pdf']) && $_FILES['rulebook_pdf']['error'] === UPLOAD_ERR_OK) {
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pengumuman_akhir = $normalizeDate($_POST['pengumuman_akhir'] ?? null);
 
         // Hapus timeline lama untuk lomba ini
-        $db->query("DELETE FROM b_timeline_lomba WHERE kategori_lomba_id = ?", [$lomba_id]);
+        $db->query("DELETE FROM {prefix}timeline_lomba WHERE kategori_lomba_id = ?", [$lomba_id]);
 
         // Tambah timeline baru
         $timelines = [
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($timelines as $timeline) {
             if (!empty($timeline['tanggal_mulai'])) {
                 $db->query(
-                    "INSERT INTO b_timeline_lomba (kategori_lomba_id, judul, deskripsi, tanggal_mulai, tanggal_selesai, urutan) VALUES (?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO {prefix}timeline_lomba (kategori_lomba_id, judul, deskripsi, tanggal_mulai, tanggal_selesai, urutan) VALUES (?, ?, ?, ?, ?, ?)",
                     [$lomba_id, $timeline['judul'], $timeline['deskripsi'], $timeline['tanggal_mulai'], $timeline['tanggal_selesai'], $timeline['urutan']]
                 );
                 $added_count++;
@@ -207,13 +207,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete_timeline') {
         $timeline_id = $_POST['timeline_id'];
-        $db->query("DELETE FROM b_timeline_lomba WHERE id = ?", [$timeline_id]);
+        $db->query("DELETE FROM {prefix}timeline_lomba WHERE id = ?", [$timeline_id]);
         $success_message = "Timeline berhasil dihapus!";
     }
 }
 
 // Ambil semua lomba
-$lomba_list = $db->fetchAll("SELECT * FROM b_kategori_lomba ORDER BY id DESC");
+$lomba_list = $db->fetchAll("SELECT * FROM {prefix}kategori_lomba ORDER BY id DESC");
 ?>
 <!DOCTYPE html>
 <html lang="id">

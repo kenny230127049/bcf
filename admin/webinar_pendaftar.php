@@ -15,16 +15,16 @@ if (isset($_GET['success'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $id = $_POST['id'] ?? '';
     if ($_POST['action'] === 'approve') {
-        $upd = $db->update('b_webinar_pendaftar', ['status' => 'approved'], 'id = ?', [$id]);
+        $upd = $db->update('{prefix}webinar_pendaftar', ['status' => 'approved'], 'id = ?', [$id]);
         $message = $upd ? 'Pendaftar disetujui' : 'Gagal menyetujui';
         $message_type = $upd ? 'success' : 'danger';
     } elseif ($_POST['action'] === 'reject') {
-        $upd = $db->update('b_webinar_pendaftar', ['status' => 'rejected'], 'id = ?', [$id]);
+        $upd = $db->update('{prefix}webinar_pendaftar', ['status' => 'rejected'], 'id = ?', [$id]);
         $message = $upd ? 'Pendaftar ditolak' : 'Gagal menolak';
         $message_type = $upd ? 'success' : 'danger';
     } elseif ($_POST['action'] === 'delete') {
         // Hapus pendaftar webinar
-        $del = $db->delete('b_webinar_pendaftar', 'id = ?', [$id]);
+        $del = $db->delete('{prefix}webinar_pendaftar', 'id = ?', [$id]);
         if ($del) {
             header('Location: webinar_pendaftar.php?success=Pendaftar berhasil dihapus');
             exit;
@@ -51,8 +51,8 @@ if ($webinar_id) {
 $where_clause = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
 // Fetch
-$pendaftar = $db->fetchAll("SELECT wp.*, w.judul FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id $where_clause ORDER BY wp.created_at DESC", $params);
-$webinars = $db->fetchAll('SELECT id, judul FROM b_webinar ORDER BY judul ASC');
+$pendaftar = $db->fetchAll("SELECT wp.*, w.judul FROM {prefix}webinar_pendaftar wp JOIN {prefix}webinar w ON wp.webinar_id = w.id $where_clause ORDER BY wp.created_at DESC", $params);
+$webinars = $db->fetchAll('SELECT id, judul FROM {prefix}webinar ORDER BY judul ASC');
 ?>
 <!DOCTYPE html>
 <html lang="id">

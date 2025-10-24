@@ -9,10 +9,10 @@ $auth = new Auth();
 $db = getDB();
 
 // Ambil data kategori lomba
-$kategori_lomba = $db->fetchAll("SELECT * FROM b_kategori_lomba WHERE status = 'aktif' ORDER BY nama");
+$kategori_lomba = $db->fetchAll("SELECT * FROM {prefix}kategori_lomba WHERE status = 'aktif' ORDER BY nama");
 
 // Ambil data webinar aktif
-$webinars = $db->fetchAll("SELECT * FROM b_webinar WHERE status = 'aktif' ORDER BY tanggal, judul");
+$webinars = $db->fetchAll("SELECT * FROM {prefix}webinar WHERE status = 'aktif' ORDER BY tanggal, judul");
 
 // Jika user sudah login, ambil data user
 if ($auth->isLoggedIn()) {
@@ -1281,7 +1281,7 @@ if (isset($_GET['logout'])) {
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-6 hero-content">
                     <h1 class="display-4 fw-bold text-white mb-4 animate__animated animate__fadeInUp">
-                        Bluvocation Creative Fest
+                        Bluvocation Creative Fest <?= $_ENV["environment"] == "development" ? "(dev site)" : "" ?>
                     </h1>
                     <p class="lead text-white mb-4 animate__animated animate__fadeInUp animate__delay-1s">
                         Platform lomba kreatif untuk siswa SD/SMP/SMA/SMK/Sederajat. Tunjukkan bakat dan kreativitasmu dalam berbagai kompetisi menarik!
@@ -1355,7 +1355,7 @@ if (isset($_GET['logout'])) {
                 <div class="col-12 col-md-6 order-2 order-md-1">
                     <div class="text-center text-md-start">
                         <p>Kreativitas adalah kemampuan melahirkan gagasan, ide, atau produk baru yang berbeda dari sebelumnya. Melalui kreativitas, kita bisa menciptakan inovasi yang relevan dengan perkembangan zaman.</p>
-                        <p>Di SMK Budi Luhur, program <strong>projek kreatif kewirausahaan</strong> mendorong siswa untuk merencanakan, memproduksi, dan memasarkan karya mereka�melatih keterampilan teknis, manajerial, serta kerja tim.</p>
+                        <p>Di SMK Budi Luhur, program <strong>projek kreatif kewirausahaan</strong> mendorong siswa untuk merencanakan, memproduksi, dan memasarkan karya mereka melatih keterampilan teknis, manajerial, serta kerja tim.</p>
 
                         <div class="row g-3 my-3 feature-list">
                             <div class="col-12 col-sm-6">
@@ -1481,7 +1481,7 @@ if (isset($_GET['logout'])) {
                 <?php foreach ($webinars as $ws): ?>
                     <?php
                     $kapasitas = (int)($ws['kapasitas'] ?? 0);
-                    $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM b_webinar_pendaftar WHERE webinar_id = ?', [$ws['id']]);
+                    $countRow = $db->fetch('SELECT COUNT(*) AS cnt FROM {prefix}webinar_pendaftar WHERE webinar_id = ?', [$ws['id']]);
                     $terdaftar = (int)($countRow['cnt'] ?? 0);
                     $sisa = max(0, $kapasitas - $terdaftar);
                     $isFull = $kapasitas > 0 ? ($sisa <= 0) : false;
@@ -1721,7 +1721,7 @@ if (isset($_GET['logout'])) {
         <!-- Webinar Saya Section -->
         <?php
         $currentUser = $auth->getCurrentUser();
-        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya, w.link_grup_wa FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
+        $userWebinarRegs = $db->fetchAll('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya, w.link_grup_wa FROM {prefix}webinar_pendaftar wp JOIN {prefix}webinar w ON wp.webinar_id = w.id WHERE wp.user_id = ? ORDER BY wp.created_at DESC', [$currentUser['id']]);
         ?>
         <section id="webinar-saya" class="py-5" style="background: #ffffff;">
             <div class="container">
@@ -1794,17 +1794,9 @@ if (isset($_GET['logout'])) {
                                                 ?>
                                             </span>
                                             <div class="mt-3 d-grid gap-2">
-                                                <?php if ($wr['status'] !== 'rejected'): ?>
-                                                    <?php if (empty($wr['bukti_transfer'])): ?>
-                                                        <a href="webinar_payment.php?id=<?php echo urlencode($wr['id']); ?>" class="btn btn-primary">
-                                                            <i class="fas fa-arrow-right"></i> Lanjut Pembayaran
-                                                        </a>
-                                                    <?php else: ?>
-                                                        <a href="<?php echo htmlspecialchars($wr['bukti_transfer']); ?>" target="_blank" class="btn btn-outline-secondary">
-                                                            <i class="fas fa-file-image"></i> Lihat Bukti
-                                                        </a>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
+                                                <a href="detail_webinar_saya.php?id=<?php echo urlencode($wr['id']) ?>" class="btn btn-primary">
+                                                    <i class="fas fa-eye me-1"></i> Detail Webinar Saya
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -1859,7 +1851,7 @@ if (isset($_GET['logout'])) {
                                 dalam berbagai bidang teknologi dan desain.
                             </p>
                             <div class="social-links">
-                                <a href="https://www.instagram.com/bluvocationfest?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                                <a href="https://www.instagram.com/bluvocationfest?utm_source=ig_we{prefix}button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                                     target="_blank"
                                     class="social-link"
                                     aria-label="Instagram">

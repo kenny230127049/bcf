@@ -13,7 +13,7 @@ $db = getDB();
 
 try {
     // Ambil data lomba dari database
-    $lomba = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ?", [$lomba_id]);
+    $lomba = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ?", [$lomba_id]);
     
     if ($lomba) {
         echo json_encode([

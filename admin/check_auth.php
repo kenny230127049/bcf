@@ -14,7 +14,7 @@ function checkAdminAuth() {
     // Verifikasi admin masih ada di database
     try {
         $db = getDB();
-        $admin = $db->fetch("SELECT * FROM b_admin WHERE id = ?", [$_SESSION['admin_id']]);
+        $admin = $db->fetch("SELECT * FROM {prefix}admin WHERE id = ?", [$_SESSION['admin_id']]);
         
         if (!$admin) {
             // Admin tidak ditemukan, hapus session dan redirect

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $success = true;
     foreach ($settings as $nama => $nilai) {
-        $result = $db->update('b_pengaturan', ['nilai' => $nilai], 'nama = ?', [$nama]);
+        $result = $db->update('{prefix}pengaturan', ['nilai' => $nilai], 'nama = ?', [$nama]);
         if ($result === false) {
             $success = false;
             break;
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Get current settings
 $pengaturan = [];
-$result = $db->fetchAll("SELECT nama, nilai FROM b_pengaturan");
+$result = $db->fetchAll("SELECT nama, nilai FROM {prefix}pengaturan");
 foreach ($result as $row) {
     $pengaturan[$row['nama']] = $row['nilai'];
 }

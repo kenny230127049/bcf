@@ -15,7 +15,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         }
         
         // Check if category has registrations
-        $result = $db->fetch("SELECT COUNT(*) as count FROM b_pendaftar WHERE kategori_lomba_id = ?", [$id]);
+        $result = $db->fetch("SELECT COUNT(*) as count FROM {prefix}pendaftar WHERE kategori_lomba_id = ?", [$id]);
         $has_registrations = $result['count'] > 0;
         
         if ($has_registrations) {
@@ -24,7 +24,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         }
         
         // Delete the category
-        $deleted = $db->delete('b_kategori_lomba', 'id = ?', [$id]);
+        $deleted = $db->delete('{prefix}kategori_lomba', 'id = ?', [$id]);
         
         if ($deleted > 0) {
             header('Location: kategori.php?success=Kategori berhasil dihapus');

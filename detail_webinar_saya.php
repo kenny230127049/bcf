@@ -1,0 +1,506 @@
+<?php
+session_start();
+require_once 'config/database.php';
+
+// Cek apakah user sudah login
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$db = getDB();
+$user_id = $_SESSION['user_id'];
+
+// Ambil data pendaftaran user
+$pendaftaran = $db->fetch("
+    SELECT
+        wp.*,
+        w.judul as judul_webinar,
+        w.pemateri as pemateri_webinar,
+        w.tanggal as tanggal_webinar,
+        w.waktu as waktu_webinar,
+        w.lokasi as lokasi_webinar,
+        w.biaya as biaya_webinar
+    FROM {prefix}webinar_pendaftar wp
+    JOIN {prefix}webinar w ON wp.webinar_id = w.id
+    WHERE wp.user_id = ?
+", [$user_id]);
+
+if (!$pendaftaran) {
+    header('Location: index.php');
+    exit();
+}
+
+// Format tanggal
+function formatTanggal($tanggal)
+{
+    return date('d F Y', strtotime($tanggal));
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Webinar Saya - Bluvocation Creative Fest</title>
+    <link rel="icon" type="image/x-icon" href="images/bcf.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            /* match site/login primary */
+            --secondary-color: #1630df;
+            /* match site/login primary-dark */
+            --accent-color: #4facfe;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #1630df 100%);
+            min-height: 100vh;
+            color: var(--dark-text);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .lomba-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .lomba-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, var(--warning-color), #f59e0b);
+            color: #212529;
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, var(--success-color), #20c997);
+            color: white;
+        }
+
+        .status-rejected {
+            background: linear-gradient(135deg, var(--danger-color), #e74c3c);
+            color: white;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .info-card h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark-text);
+            min-width: 150px;
+        }
+
+        .info-value {
+            color: #64748b;
+            text-align: right;
+            flex: 1;
+        }
+
+        .anggota-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .anggota-header {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .anggota-info {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-date {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .btn-back {
+            border: 1px solid var(--border-color);
+            background: var(--border-color);
+            color: var(--dark-text);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            color: var(--dark-text);
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .lomba-title {
+                font-size: 1.8rem;
+            }
+
+            .lomba-subtitle {
+                font-size: 1rem;
+            }
+
+            .content-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .info-card {
+                padding: 1rem;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .info-label {
+                min-width: auto;
+                font-size: 0.9rem;
+            }
+
+            .info-value {
+                text-align: left;
+                font-size: 0.9rem;
+            }
+
+            .anggota-card {
+                padding: 0.75rem;
+            }
+
+            .timeline-item {
+                padding: 0.75rem 0;
+            }
+
+            .timeline-icon {
+                width: 35px;
+                height: 35px;
+                margin-right: 0.75rem;
+            }
+
+            .stats-card {
+                padding: 1rem;
+            }
+
+            .stats-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .lomba-title {
+                font-size: 1.5rem;
+            }
+
+            .status-badge {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .info-card h5 {
+                font-size: 1rem;
+            }
+
+            .timeline-title {
+                font-size: 0.9rem;
+            }
+
+            .timeline-date {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.php">
+                <img src="images/bcf.png" alt="BCF" height="30" class="me-2">
+                Bluvocation Creative Fest
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="logout.php">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="lomba-title"><?= htmlspecialchars($pendaftaran['judul_webinar']) ?></h1>
+                <p class="lomba-subtitle">Detail Pendaftaran Webinar</p>
+                <span class="status-badge status-<?= $pendaftaran['status'] ?>">
+                    <?= ucfirst($pendaftaran['status']) ?>
+                </span>
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-section">
+                <!-- Informasi Pendaftaran -->
+                <div class="info-card">
+                    <h5><i class="fas fa-user"></i> Informasi Pendaftaran</h5>
+                    <div class="info-row">
+                        <span class="info-label">Nama Lengkap:</span>
+                        <span class="info-value"><?= htmlspecialchars($pendaftaran['nama']) ?></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value"><?= htmlspecialchars($pendaftaran['email']) ?></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">No. Telepon:</span>
+                        <span class="info-value"><?= htmlspecialchars($pendaftaran['telepon']) ?></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Institusi:</span>
+                        <span class="info-value"><?= htmlspecialchars($pendaftaran['institusi']) ?></span>
+                    </div>
+                </div>
+
+                <!-- Informasi Pembayaran -->
+                <div class="info-card">
+                    <h5><i class="fas fa-credit-card"></i> Informasi Pembayaran</h5>
+                    <div class="info-row">
+                        <span class="info-label">Status Pembayaran:</span>
+                        <span class="info-value">
+                            <?php if ($pendaftaran['bukti_transfer'] != null): ?>
+                                <span class="status-badge bg-success text-white">Sudah Dibayar</span>
+                            <?php else: ?>
+                                <span class="status-badge bg-danger text-white">Belum Dibayar</span>
+                            <?php endif; ?>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Biaya Pendaftaran:</span>
+                        <span class="info-value">Rp <?= number_format($pendaftaran['biaya_webinar'], 0, ',', '.') ?></span>
+                    </div>
+                </div>
+
+                <!-- Informasi Webinar  -->
+                <div class="info-card">
+                    <h5><i class="fas fa-user-group"></i> Informasi Webinar</h5>
+
+                    <div class="info-row">
+                        <span class="info-label">Pemateri:</span>
+                        <span class="info-value"><?= $pendaftaran['pemateri_webinar'] ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Tanggal:</span>
+                        <span class="info-value"><?= $pendaftaran['tanggal_webinar'] ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Waktu:</span>
+                        <span class="info-value"><?= $pendaftaran['waktu_webinar'] ?></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Lokasi:</span>
+                        <span class="info-value"><?= $pendaftaran['lokasi_webinar'] ?></span>
+                    </div>
+                </div>
+
+
+                <!-- Tombol Kembali -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="index.php" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Kembali ke Beranda
+                    </a>
+
+                    <?php if ($pendaftaran['bukti_transfer'] == null): ?>
+                        <a href="webinar_payment.php?id=<?= $pendaftaran['id'] ?>" class="btn-continue">
+                            <i class="fas fa-arrow-right"></i>
+                            Lanjut Proses Pendaftaran
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

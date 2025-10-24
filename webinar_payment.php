@@ -15,7 +15,7 @@ $db = getDB();
 $id = $_GET['id'] ?? '';
 
 // Ambil data pendaftar dari database
-$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
+$reg = $db->fetch('SELECT wp.*, w.judul, w.biaya FROM {prefix}webinar_pendaftar wp JOIN {prefix}webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
 
 if (!$reg) {
     header('Location: index.php#webinar');
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($bukti_path) {
             $updData['bukti_transfer'] = $bukti_path;
         }
-        $upd = $db->update('b_webinar_pendaftar', $updData, 'id = ?', [$id]);
+        $upd = $db->update('{prefix}webinar_pendaftar', $updData, 'id = ?', [$id]);
         if ($upd !== false) {
             header('Location: sukses.php?id=' . urlencode($id));
             exit;

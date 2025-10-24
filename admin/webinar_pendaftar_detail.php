@@ -3,7 +3,7 @@ require_once 'check_auth.php';
 
 $db = getDB();
 $id = $_GET['id'] ?? '';
-$p = $db->fetch('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM b_webinar_pendaftar wp JOIN b_webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
+$p = $db->fetch('SELECT wp.*, w.judul, w.tanggal, w.waktu, w.lokasi, w.biaya FROM {prefix}webinar_pendaftar wp JOIN {prefix}webinar w ON wp.webinar_id = w.id WHERE wp.id = ?', [$id]);
 if (!$p) {
     header('Location: webinar_pendaftar.php');
     exit;

@@ -17,40 +17,40 @@ $info_kategori = null;
 
 if ($id) {
     // Check if this is a webinar registration
-    $webinar_reg = $db->fetch("SELECT * FROM b_webinar_pendaftar WHERE id = ?", [$id]);
+    $webinar_reg = $db->fetch("SELECT * FROM {prefix}webinar_pendaftar WHERE id = ?", [$id]);
     if ($webinar_reg) {
         $is_webinar = true;
         $pendaftar = $db->fetch("
             SELECT wp.*, w.judul as webinar_nama, w.biaya
-            FROM b_webinar_pendaftar wp 
-            JOIN b_webinar w ON wp.webinar_id = w.id 
+            FROM {prefix}webinar_pendaftar wp 
+            JOIN {prefix}webinar w ON wp.webinar_id = w.id 
             WHERE wp.id = ?
         ", [$id]);
     } else {
         // This is a competition registration
         $pendaftar = $db->fetch("
             SELECT p.*, kl.nama as kategori_nama, kl.biaya
-            FROM b_pendaftar p 
-            JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+            FROM {prefix}pendaftar p 
+            JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
             WHERE p.id = ?
         ", [$id]);
 
         if ($pendaftar) {
-            $info_kategori = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ?", [$pendaftar['kategori_lomba_id']]);
+            $info_kategori = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ?", [$pendaftar['kategori_lomba_id']]);
         }
     }
 } elseif ($payment_id && $pendaftar_id) {
     // Legacy competition registration with payment_id
-    $payment = $db->fetch("SELECT * FROM b_pembayaran WHERE id = ?", [$payment_id]);
+    $payment = $db->fetch("SELECT * FROM {prefix}pembayaran WHERE id = ?", [$payment_id]);
     $pendaftar = $db->fetch("
         SELECT p.*, kl.nama as kategori_nama, kl.biaya
-        FROM b_pendaftar p 
-        JOIN b_kategori_lomba kl ON p.kategori_lomba_id = kl.id 
+        FROM {prefix}pendaftar p 
+        JOIN {prefix}kategori_lomba kl ON p.kategori_lomba_id = kl.id 
         WHERE p.id = ?
     ", [$pendaftar_id]);
 
     if ($pendaftar) {
-        $info_kategori = $db->fetch("SELECT * FROM b_kategori_lomba WHERE id = ?", [$pendaftar['kategori_lomba_id']]);
+        $info_kategori = $db->fetch("SELECT * FROM {prefix}kategori_lomba WHERE id = ?", [$pendaftar['kategori_lomba_id']]);
     }
 }
 
