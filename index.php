@@ -1281,7 +1281,7 @@ if (isset($_GET['logout'])) {
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-6 hero-content">
                     <h1 class="display-4 fw-bold text-white mb-4 animate__animated animate__fadeInUp">
-                        Bluvocation Creative Fest
+                        Bluvocation Creative Fest <?= $_ENV["environment"] == "development" ? "(dev site)" : "" ?>
                     </h1>
                     <p class="lead text-white mb-4 animate__animated animate__fadeInUp animate__delay-1s">
                         Platform lomba kreatif untuk siswa SD/SMP/SMA/SMK/Sederajat. Tunjukkan bakat dan kreativitasmu dalam berbagai kompetisi menarik!
